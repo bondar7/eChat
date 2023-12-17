@@ -1,4 +1,4 @@
-package com.example.echat.screens.chats_screen
+package com.example.echat.ui.screens.chats_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
@@ -45,9 +45,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
 import com.example.echat.R
-import com.example.echat.screens.BottomNavigationBar
+import com.example.echat.ui.screens.BottomNavigationBar
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.MainBackgroundColor
 import com.example.echat.ui.theme.gliroy
@@ -55,10 +56,10 @@ import com.example.echat.ui.theme.gliroy
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatsScreen(viewModel: MainViewModel = hiltViewModel()) {
+fun ChatsScreen(viewModel: MainViewModel = hiltViewModel(), navHostController: NavHostController) {
     Scaffold(
         containerColor = MainBackgroundColor,
-        bottomBar = { BottomNavigationBar(viewModel = viewModel) }
+        bottomBar = { BottomNavigationBar(navController = navHostController) }
     ) {
         Column(
             modifier = Modifier
@@ -75,7 +76,7 @@ fun ChatsScreen(viewModel: MainViewModel = hiltViewModel()) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Hello <Username> 👋", style = TextStyle(
+                    text = "Hello ${viewModel.user?.username} 👋", style = TextStyle(
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,

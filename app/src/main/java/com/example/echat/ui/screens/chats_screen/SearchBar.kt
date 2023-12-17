@@ -1,4 +1,4 @@
-package com.example.echat.screens.chats_screen
+package com.example.echat.ui.screens.chats_screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding

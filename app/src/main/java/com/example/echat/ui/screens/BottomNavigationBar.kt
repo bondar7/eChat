@@ -1,4 +1,4 @@
-package com.example.echat.screens
+package com.example.echat.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -28,17 +28,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
+import com.example.echat.navigation.Screen
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.MainBackgroundColor
 
 @Composable
-fun BottomNavigationBar(viewModel: MainViewModel) {
+fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navController: NavHostController) {
     val navigationBarItems = listOf<BottomNavigationIcon>(
         BottomNavigationIcon(
             selectedIcon = Icons.Default.Message,
             unselectedIcon = Icons.Outlined.Message,
-            route = ""
+            route = Screen.ChatsScreen.route
         ),
         BottomNavigationIcon(
             selectedIcon = Icons.Default.Phone,
@@ -58,7 +63,7 @@ fun BottomNavigationBar(viewModel: MainViewModel) {
         BottomNavigationIcon(
             selectedIcon = Icons.Default.Settings,
             unselectedIcon = Icons.Outlined.Settings,
-            route = ""
+            route = Screen.SettingsScreen.route
         )
     )
 
@@ -71,23 +76,31 @@ fun BottomNavigationBar(viewModel: MainViewModel) {
 
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp)
         ) {
             navigationBarItems.forEachIndexed { index, item ->
                 NavigationBarItem(
                     selected = selectedItemIndex == index,
                     onClick = {
                         viewModel.setSelectedNavigationItemIndex(index)
-                        // navigate to certain screen
+                        navController.navigate(item.route) {
+                            popUpTo(item.route)
+                        }
                     },
                     icon = {
                         if (index == 2) {
-                            Box(modifier = Modifier.clip(CircleShape).background(ElementColor)) {
+                            Box(modifier = Modifier
+                                .clip(CircleShape)
+                                .background(ElementColor)) {
                                 Icon(
                                     imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
                                     contentDescription = null,
                                     tint = Color.White,
-                                    modifier = Modifier.padding(15.dp).size(25.dp)
+                                    modifier = Modifier
+                                        .padding(15.dp)
+                                        .size(25.dp)
                                 )
                             }
                         } else {

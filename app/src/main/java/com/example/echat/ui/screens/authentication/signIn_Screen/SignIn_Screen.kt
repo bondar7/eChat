@@ -1,5 +1,6 @@
-package com.example.echat.screens.authentication_screens.login_screen
+package com.example.echat.ui.screens.authentication.signIn_Screen
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -40,16 +43,49 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.example.echat.screens.Screen
+import com.example.echat.auth.AuthResult
+import com.example.echat.navigation.Screen
+import com.example.echat.ui.screens.authentication.AuthViewModel
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(
-    viewModel: LoginViewModel = hiltViewModel(),
+fun SignInScreen(
+    viewModel: AuthViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = viewModel, key2 = context) {
+        viewModel.authResults.collect {
+            when (it) {
+                is AuthResult.Authorized -> {
+                    navController.navigate(Screen.ChatsScreen.route) {
+                        popUpTo(Screen.ChatsScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+                is AuthResult.Unauthorized -> {
+                    Toast.makeText(
+                        context,
+                        "You are not authorized",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+                is AuthResult.UnknownError -> {
+                    Toast.makeText(
+                        context,
+                        "An unknown error occured",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
+    }
+
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -81,7 +117,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Login", style = TextStyle(
+                text = "Sign In", style = TextStyle(
                     fontFamily = gliroy,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
@@ -90,22 +126,22 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(35.dp))
             ColumnItem(
                 "Username",
-                "Enter your username",
-                viewModel.loginTextState.value,
-                { viewModel.onUpdateLoginText(it) })
-//            ColumnItem(
-//                "Phone Number",
-//                "Enter your phone number",
-//                viewModel.phoneTextState.value,
-//                { viewModel.onUpdatePhoneText(it) })
+                "Create your username",
+                viewModel.signUpUsername.value,
+                { viewModel.onUpdateSignUpUsername(it) })
+            ColumnItem(
+                "Phone Number",
+                "Enter your phone number",
+                viewModel.phoneSignUp.value,
+                { viewModel.onUpdatePhoneSignUp(it) })
             ColumnItem(
                 "Password",
-                "Enter your password",
-                viewModel.passwordTextState.value,
-                { viewModel.onUpdatePasswordText(it) })
+                "Create your password",
+                viewModel.signUpPassword.value,
+                { viewModel.onUpdateSignUpPassword(it) })
 
             TextButton(
-                onClick = { /*TODO*/ }, modifier = Modifier
+                onClick = { viewModel.signUp() }, modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(
@@ -113,7 +149,7 @@ fun LoginScreen(
                     )
             ) {
                 Text(
-                    text = "Login",
+                    text = "Sign In",
                     modifier = Modifier.padding(vertical = 8.dp),
                     color = Color.White,
                     fontFamily = gliroy,
@@ -123,12 +159,12 @@ fun LoginScreen(
             }
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = "Don't have an account?")
+                Text(text = "Already have an account?")
                 TextButton(onClick = {
                     navController.popBackStack()
-                    navController.navigate(Screen.SignIn.route)
+                    navController.navigate(Screen.LogIn.route)
                 }) {
-                    Text(text = "Sign in now", style = TextStyle(
+                    Text(text = "Log in now", style = TextStyle(
                         color = ElementColor,
                         fontFamily = gliroy,
                         fontSize = 16.sp,
@@ -137,7 +173,6 @@ fun LoginScreen(
                     )
                 }
             }
-
         }
     }
 }

@@ -1,23 +1,26 @@
 package com.example.echat.navigation
 
+import android.content.Context.MODE_PRIVATE
 import androidx.compose.runtime.Composable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.echat.screens.Screen
-import com.example.echat.screens.authentication_screens.login_screen.LoginScreen
-import com.example.echat.screens.authentication_screens.signIn_Screen.SignInScreen
+import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
+import com.example.echat.ui.screens.authentication.signIn_Screen.SignInScreen
+import com.example.echat.ui.screens.chats_screen.ChatsScreen
+import com.example.echat.ui.screens.settings_screen.SettingsScreen
 
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
 ) {
-    NavHost(navController = navController, startDestination = Screen.SignIn.route) {
+    NavHost(navController = navController, startDestination = Screen.ChatsScreen.route) {
         composable(
             Screen.SignIn.route,
             exitTransition = {
@@ -35,6 +38,19 @@ fun SetupNavGraph(
             enterTransition = { slideInHorizontally },
         ) {
             LoginScreen(navController = navController)
+        }
+        composable(
+            Screen.ChatsScreen.route,
+        ) {
+            ChatsScreen(navHostController = navController)
+        }
+        composable(
+            Screen.SettingsScreen.route,
+        ) {
+            SettingsScreen(
+                navHostController = navController,
+                prefs = LocalContext.current.getSharedPreferences("prefs", MODE_PRIVATE)
+            )
         }
     }
 }
