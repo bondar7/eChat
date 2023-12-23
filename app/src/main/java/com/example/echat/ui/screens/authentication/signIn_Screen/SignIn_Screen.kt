@@ -63,7 +63,7 @@ fun SignInScreen(
             when (it) {
                 is AuthResult.Authorized -> {
                     navController.navigate(Screen.ChatsScreen.route) {
-                        popUpTo(Screen.ChatsScreen.route) {
+                        popUpTo(Screen.SignIn.route) {
                             inclusive = true
                         }
                     }
@@ -130,10 +130,10 @@ fun SignInScreen(
                 viewModel.signUpUsername.value,
                 { viewModel.onUpdateSignUpUsername(it) })
             ColumnItem(
-                "Phone Number",
-                "Enter your phone number",
-                viewModel.phoneSignUp.value,
-                { viewModel.onUpdatePhoneSignUp(it) })
+                "Email address",
+                "Enter your email address",
+                viewModel.emailSignUp.value,
+                { viewModel.onUpdateEmailSignUp(it) })
             ColumnItem(
                 "Password",
                 "Create your password",

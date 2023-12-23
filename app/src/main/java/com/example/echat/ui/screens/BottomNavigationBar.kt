@@ -1,5 +1,6 @@
 package com.example.echat.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -23,6 +24,9 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -30,12 +34,17 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
 import com.example.echat.navigation.Screen
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.MainBackgroundColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navController: NavHostController) {
@@ -67,8 +76,6 @@ fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navControlle
         )
     )
 
-    val selectedItemIndex = viewModel.selectedNavigationItemIndex.value
-
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth(),
@@ -81,12 +88,15 @@ fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navControlle
                 .padding(horizontal = 10.dp)
         ) {
             navigationBarItems.forEachIndexed { index, item ->
+                val isSelected = navController.currentDestination?.hierarchy?.any { it.route == item.route } == true
                 NavigationBarItem(
-                    selected = selectedItemIndex == index,
+                    selected = isSelected,
                     onClick = {
-                        viewModel.setSelectedNavigationItemIndex(index)
-                        navController.navigate(item.route) {
-                            popUpTo(item.route)
+                        if (navController.currentDestination?.route != item.route) {
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
                         }
                     },
                     icon = {
@@ -95,7 +105,7 @@ fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navControlle
                                 .clip(CircleShape)
                                 .background(ElementColor)) {
                                 Icon(
-                                    imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
+                                    imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
                                     contentDescription = null,
                                     tint = Color.White,
                                     modifier = Modifier
@@ -105,7 +115,7 @@ fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navControlle
                             }
                         } else {
                             Icon(
-                                imageVector = if (selectedItemIndex == index) item.selectedIcon else item.unselectedIcon,
+                                imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
                                 contentDescription = null,
                                 modifier = Modifier.size(30.dp)
                             )

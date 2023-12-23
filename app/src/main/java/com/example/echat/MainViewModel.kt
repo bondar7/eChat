@@ -2,11 +2,14 @@ package com.example.echat
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import com.example.echat.auth.AuthRepository
 import com.example.echat.data.model.User
+import com.example.echat.navigation.Screen
 import com.example.echat.ui.screens.BottomNavigationIcon
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,14 +21,6 @@ class MainViewModel @Inject constructor(
 ): ViewModel(
 ) {
 
-    // Bottom navigation
-   private val _selectedNavigationItemIndex = mutableStateOf<Int>(0)
-    val selectedNavigationItemIndex = _selectedNavigationItemIndex
-
-    fun setSelectedNavigationItemIndex(index: Int) {
-        _selectedNavigationItemIndex.value = index
-    }
-
     // Search bar
     private val _textState = mutableStateOf("")
     val textState = _textState
@@ -35,7 +30,8 @@ class MainViewModel @Inject constructor(
         _textState.value = newText
     }
 
-    val user = loadUser()
+    private val _user = mutableStateOf(loadUser())
+    val user = _user
 
   private fun loadUser(): User? {
         val gson = Gson()

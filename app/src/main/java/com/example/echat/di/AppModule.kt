@@ -3,6 +3,7 @@ package com.example.echat.di
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import com.example.echat.MainViewModel
 import com.example.echat.auth.AuthApi
 import com.example.echat.auth.AuthRepository
 import com.example.echat.auth.AuthRepositoryImpl

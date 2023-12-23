@@ -63,7 +63,7 @@ fun LoginScreen(
             when (it) {
                 is AuthResult.Authorized -> {
                     navController.navigate(Screen.ChatsScreen.route) {
-                        popUpTo(Screen.ChatsScreen.route) {
+                        popUpTo(Screen.LogIn.route) {
                             inclusive = true
                         }
                     }

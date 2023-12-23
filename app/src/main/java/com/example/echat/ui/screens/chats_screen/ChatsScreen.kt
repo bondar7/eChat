@@ -76,7 +76,7 @@ fun ChatsScreen(viewModel: MainViewModel = hiltViewModel(), navHostController: N
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Hello ${viewModel.user?.username} 👋", style = TextStyle(
+                    text = "Hello ${viewModel.user.value?.username} 👋", style = TextStyle(
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,

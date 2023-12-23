@@ -1,9 +1,12 @@
 package com.example.echat.ui.screens.settings_screen
 
 import android.annotation.SuppressLint
+import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Logout
@@ -30,12 +34,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -46,9 +55,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
 import com.example.echat.R
+import com.example.echat.data.model.User
+import com.example.echat.navigation.Screen
 import com.example.echat.ui.screens.BottomNavigationBar
+import com.example.echat.ui.screens.authentication.AuthViewModel
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
+import com.google.gson.Gson
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CommitPrefEdits")
@@ -56,10 +69,11 @@ import com.example.echat.ui.theme.gliroy
 fun SettingsScreen(
     navHostController: NavHostController,
     viewModel: MainViewModel = hiltViewModel(),
-    prefs: SharedPreferences
+    authViewModel: AuthViewModel = hiltViewModel(),
 ) {
     val user = viewModel.user
-    
+    val prefs = LocalContext.current.getSharedPreferences("prefs", MODE_PRIVATE)
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         containerColor = Color(0xFFF7F7FA),
@@ -72,6 +86,8 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .background(Color(0xFFF7F7FA))
         ) {
+
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -80,27 +96,43 @@ fun SettingsScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(15.dp)
+                        .padding(15.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.avatar),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clip(CircleShape)
-                            .size(65.dp)
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = user?.username ?: "Guest",
-                            fontSize = 18.sp,
-                            color = Color.Black,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = gliroy
+                    Row {
+                        Image(
+                            painter = painterResource(id = R.drawable.avatar),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .size(65.dp)
                         )
-                        Text(text = "online", color = Color.DarkGray, fontSize = 12.sp,fontFamily = gliroy)
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = user.value?.username ?: "Guest",
+                                fontSize = 18.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = gliroy
+                            )
+                            Text(
+                                text = "online",
+                                color = Color.DarkGray,
+                                fontSize = 12.sp,
+                                fontFamily = gliroy
+                            )
+                        }
                     }
-                    IconButton(onClick = { prefs.edit().remove("USER") }) {
+                    IconButton(onClick = {
+                        prefs.edit().remove("USER").apply()
+                        navHostController.navigate(Screen.SignIn.route) {
+                            popUpTo(Screen.SettingsScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    }) {
                         Icon(imageVector = Icons.Default.Logout, contentDescription = null)
                     }
                 }
@@ -131,7 +163,12 @@ fun SettingsScreen(
                             fontFamily = gliroy
                         )
                     )
-                    AccountInfoItem("@${user?.username}", "Username")
+                    AccountInfoItem(
+                        "@${user.value?.username}",
+                        "Tap to change username",
+                        onClick = {
+                            navHostController.navigate(Screen.EditUsernameScreen.route)
+                        })
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -139,7 +176,10 @@ fun SettingsScreen(
                             .height(1.dp)
                             .background(Color.LightGray)
                     )
-                    AccountInfoItem(user?.phoneNumber ?: "*** *** ****", "Tap to change phone number")
+                    AccountInfoItem(
+                        user.value?.email ?: "",
+                        "Tap to change email address",
+                        onClick = {  })
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -147,13 +187,29 @@ fun SettingsScreen(
                             .height(1.dp)
                             .background(Color.LightGray)
                     )
-                    AccountInfoItem(user?.bio ?: "Bio", "Add a few words about yourself")
+                    AccountInfoItem(
+                        "Change account password",
+                        "Tap to change password",
+                        onClick = { navHostController.navigate(Screen.EditPasswordScreen.route) })
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp)
+                            .height(1.dp)
+                            .background(Color.LightGray)
+                    )
+                    AccountInfoItem(
+                        user.value?.bio ?: "Bio",
+                        "Add a few words about yourself",
+                        onClick = { navHostController.navigate(Screen.EditUserBioScreen.route) })
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(start = 20.dp, top = 15.dp, bottom = 10.dp)
@@ -167,14 +223,6 @@ fun SettingsScreen(
                             fontFamily = gliroy
                         )
                     )
-                    SettingsItem(Icons.Outlined.Lock, "Privacy and Security")
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 12.dp)
-                            .height(1.dp)
-                            .background(Color.LightGray)
-                    )
                     SettingsItem(Icons.Outlined.Language, "Language")
                     Box(
                         modifier = Modifier
@@ -187,9 +235,11 @@ fun SettingsScreen(
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+            ) {
                 Column(
                     modifier = Modifier
                         .padding(start = 20.dp, top = 15.dp, bottom = 10.dp)
@@ -208,7 +258,7 @@ fun SettingsScreen(
             }
         }
     }
-    
+
 }
 
 @Composable
@@ -221,13 +271,16 @@ private fun SettingsItem(icon: ImageVector, text: String) {
 }
 
 @Composable
-private fun AccountInfoItem(text: String, description: String) {
+private fun AccountInfoItem(text: String, description: String, onClick: () -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .clip(RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp))
+            .fillMaxWidth()
+            .clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().padding(start = 10.dp)) {
             Text(
                 text = text, style = TextStyle(
                     color = Color.Black,

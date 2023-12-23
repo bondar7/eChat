@@ -1,5 +1,9 @@
 package com.example.echat.auth
 
+import com.echat_backend.data.requests.ChangePasswordRequest
+import com.echat_backend.data.requests.ChangeEmailRequest
+import com.echat_backend.data.requests.ChangeUsernameRequest
+import com.echat_backend.data.requests.CheckPasswordRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -16,6 +20,31 @@ interface AuthApi {
     suspend fun logIn(
         @Body request: LogInRequest
     ): AuthResponse
+
+    @POST("change-username")
+    suspend fun changeUsername(
+        @Body request: ChangeUsernameRequest
+    )
+
+    @POST("change-password")
+    suspend fun changePassword(
+        @Body request: ChangePasswordRequest
+    )
+    @POST("check-password")
+    suspend fun checkPassword(
+        @Body request: CheckPasswordRequest
+    ): Boolean
+
+    @POST("change-email")
+    suspend fun changeEmail(
+        @Body request: ChangeEmailRequest
+    )
+
+    @POST("change-user-bio")
+    suspend fun changeUserBio(
+        @Body request: ChangeUserBioRequest
+    )
+
 
     @GET("authenticate")
     suspend fun authenticate(
