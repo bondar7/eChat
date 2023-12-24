@@ -86,8 +86,6 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .background(Color(0xFFF7F7FA))
         ) {
-
-
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -179,7 +177,7 @@ fun SettingsScreen(
                     AccountInfoItem(
                         user.value?.email ?: "",
                         "Tap to change email address",
-                        onClick = {  })
+                        onClick = { navHostController.navigate(Screen.EditEmailScreen.route) })
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()

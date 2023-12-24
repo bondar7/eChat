@@ -265,7 +265,7 @@ private fun EnterNewPassword(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CheckPassword(
+fun CheckPassword(
     username: String,
     authViewModel: AuthViewModel,
     hideCheckingPassword: () -> Unit,

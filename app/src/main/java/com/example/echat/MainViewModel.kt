@@ -32,6 +32,9 @@ class MainViewModel @Inject constructor(
 
     private val _user = mutableStateOf(loadUser())
     val user = _user
+    fun updateUser(user: User) {
+        _user.value = user
+    }
 
   private fun loadUser(): User? {
         val gson = Gson()

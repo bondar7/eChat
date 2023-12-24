@@ -101,6 +101,13 @@ class AuthViewModel @Inject constructor(
         _pwError1.value = newText
     }
 
+    // email error
+    private val _emailError = mutableStateOf("")
+    val emailError = _emailError
+    fun updateEmailError(newText: String) {
+        _emailError.value = newText
+    }
+
 
     fun logIn() {
         viewModelScope.launch {

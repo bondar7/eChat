@@ -27,7 +27,7 @@ object AppModule {
             .baseUrl("http://10.0.2.2:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create()
+            .create(AuthApi::class.java)
     }
 
     @Provides
@@ -38,7 +38,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(api: AuthApi, prefs: SharedPreferences): AuthRepository {
-        return AuthRepositoryImpl(api, prefs)
+    fun provideMainViewModel(prefs: SharedPreferences): MainViewModel {
+        return MainViewModel(prefs)
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthRepository(api: AuthApi, prefs: SharedPreferences, mainViewModel: MainViewModel): AuthRepository {
+        return AuthRepositoryImpl(api, prefs, mainViewModel)
     }
 }

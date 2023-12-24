@@ -18,6 +18,7 @@ import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
 import com.example.echat.ui.screens.authentication.signIn_Screen.SignInScreen
 import com.example.echat.ui.screens.chats_screen.ChatsScreen
 import com.example.echat.ui.screens.settings_screen.EditBioScreen
+import com.example.echat.ui.screens.settings_screen.EditEmailScreen
 import com.example.echat.ui.screens.settings_screen.EditPasswordScreen
 import com.example.echat.ui.screens.settings_screen.EditUsernameScreen
 import com.example.echat.ui.screens.settings_screen.SettingsScreen
@@ -79,6 +80,11 @@ fun SetupNavGraph(
             Screen.EditPasswordScreen.route,
         ) {
             EditPasswordScreen(navController = navController)
+        }
+        composable(
+            Screen.EditEmailScreen.route,
+        ) {
+            EditEmailScreen(navController = navController)
         }
     }
 }

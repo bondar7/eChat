@@ -9,12 +9,14 @@ import com.echat_backend.data.requests.ChangePasswordRequest
 import com.echat_backend.data.requests.ChangeEmailRequest
 import com.echat_backend.data.requests.ChangeUsernameRequest
 import com.echat_backend.data.requests.CheckPasswordRequest
+import com.example.echat.MainViewModel
 import com.example.echat.data.model.User
 import com.google.gson.Gson
 
 class AuthRepositoryImpl(
     private val authApi: AuthApi,
     private val prefs: SharedPreferences,
+    private val mainViewModel: MainViewModel
 ) : AuthRepository {
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
     override suspend fun signUp(
@@ -73,6 +75,7 @@ class AuthRepositoryImpl(
                 val updatedUser = user.copy(username = newUsername)
                 removeUser()
                 saveUser(updatedUser)
+                mainViewModel.updateUser(updatedUser)
             }
         } catch (e: HttpException) {
             e.printStackTrace()
@@ -120,6 +123,7 @@ class AuthRepositoryImpl(
                 val updatedUser = user.copy(email = newEmail)
                 removeUser()
                 saveUser(updatedUser)
+                mainViewModel.updateUser(updatedUser)
             }
         } catch (e: HttpException) {
             e.printStackTrace()
@@ -140,6 +144,7 @@ class AuthRepositoryImpl(
                 val updatedUser = user.copy(bio = newBio)
                 removeUser()
                 saveUser(updatedUser)
+                mainViewModel.updateUser(updatedUser)
             }
         } catch (e: HttpException) {
             e.printStackTrace()
