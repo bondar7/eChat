@@ -1,4 +1,4 @@
-package com.example.echat.ui.screens.authentication
+package com.example.echat.auth
 
 import android.util.Log
 import androidx.compose.runtime.MutableState
@@ -7,8 +7,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.echat.auth.AuthRepository
-import com.example.echat.auth.AuthResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -83,12 +81,6 @@ class AuthViewModel @Inject constructor(
         _logInPassword.value = newText
     }
 
-    //
-    private val _isUsernameAvailable = mutableStateOf("")
-    val isUsernameAvailable = _isUsernameAvailable
-    private val _isUsernameAvailableColor = mutableStateOf(Color.Black)
-    val isUsernameAvailableColor = _isUsernameAvailableColor
-
     // errors password
     private val _pwError1 = mutableStateOf("")
     private val _pwError2 = mutableStateOf("")
@@ -140,6 +132,16 @@ class AuthViewModel @Inject constructor(
             if (usernameToFindUser.isNotBlank() && newUsername.length > 3) {
                 authRepository.changeUsername(usernameToFindUser, newUsername)
             }
+        }
+    }
+
+    // checking username
+    private val _isUsernameAvailableState: MutableState<Boolean?> = mutableStateOf(null)
+    val isUsernameAvailable: MutableState<Boolean?> = _isUsernameAvailableState
+    fun checkUsername(username: String) {
+        viewModelScope.launch {
+            val isAvailable = authRepository.checkUsername(username)
+            _isUsernameAvailableState.value = isAvailable
         }
     }
 

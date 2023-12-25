@@ -1,6 +1,5 @@
 package com.example.echat.ui.screens.authentication.login_screen
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,7 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.auth.AuthResult
 import com.example.echat.navigation.Screen
-import com.example.echat.ui.screens.authentication.AuthViewModel
+import com.example.echat.auth.AuthViewModel
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 

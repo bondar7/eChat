@@ -45,7 +45,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.auth.AuthResult
 import com.example.echat.navigation.Screen
-import com.example.echat.ui.screens.authentication.AuthViewModel
+import com.example.echat.auth.AuthViewModel
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 

@@ -7,16 +7,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.echat.auth.AuthResult
-import com.example.echat.navigation.Screen
 import com.example.echat.navigation.SetupNavGraph
-import com.example.echat.ui.screens.authentication.AuthViewModel
+import com.example.echat.auth.AuthViewModel
 import com.example.echat.ui.theme.EChatTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {

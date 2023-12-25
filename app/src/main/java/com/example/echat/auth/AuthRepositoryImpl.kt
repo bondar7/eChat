@@ -84,6 +84,18 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun checkUsername(username: String): Boolean {
+        return try {
+            authApi.checkUsername(username)
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     override suspend fun changePassword(usernameToFindUser: String, newPassword: String) {
         try {
             val request = ChangePasswordRequest(

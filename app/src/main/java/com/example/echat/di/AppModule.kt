@@ -7,6 +7,7 @@ import com.example.echat.MainViewModel
 import com.example.echat.auth.AuthApi
 import com.example.echat.auth.AuthRepository
 import com.example.echat.auth.AuthRepositoryImpl
+import com.example.echat.auth.AuthViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,7 +45,11 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(api: AuthApi, prefs: SharedPreferences, mainViewModel: MainViewModel): AuthRepository {
+    fun provideAuthRepository(
+        api: AuthApi,
+        prefs: SharedPreferences,
+        mainViewModel: MainViewModel,
+    ): AuthRepository {
         return AuthRepositoryImpl(api, prefs, mainViewModel)
     }
 }

@@ -21,6 +21,11 @@ interface AuthApi {
         @Body request: LogInRequest
     ): AuthResponse
 
+    @POST("check-username")
+    suspend fun checkUsername(
+        @Body request: String
+    ): Boolean
+
     @POST("change-username")
     suspend fun changeUsername(
         @Body request: ChangeUsernameRequest
