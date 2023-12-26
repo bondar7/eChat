@@ -1,28 +1,22 @@
 package com.example.echat.navigation
 
-import android.content.Context.MODE_PRIVATE
 import androidx.compose.runtime.Composable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.echat.auth.AuthRepository
-import com.example.echat.auth.AuthResult
 import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
-import com.example.echat.ui.screens.authentication.signIn_Screen.SignInScreen
+import com.example.echat.ui.screens.authentication.signup_screen.SignInScreen
 import com.example.echat.ui.screens.chats_screen.ChatsScreen
 import com.example.echat.ui.screens.settings_screen.EditBioScreen
 import com.example.echat.ui.screens.settings_screen.EditEmailScreen
 import com.example.echat.ui.screens.settings_screen.EditPasswordScreen
 import com.example.echat.ui.screens.settings_screen.EditUsernameScreen
 import com.example.echat.ui.screens.settings_screen.SettingsScreen
-import kotlinx.coroutines.CoroutineScope
 
 @Composable
 fun SetupNavGraph(

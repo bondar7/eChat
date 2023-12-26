@@ -3,6 +3,8 @@ package com.example.echat.di
 import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.ViewModelStoreOwner
 import com.example.echat.MainViewModel
 import com.example.echat.auth.AuthApi
 import com.example.echat.auth.AuthRepository
@@ -11,6 +13,7 @@ import com.example.echat.auth.AuthViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -52,4 +55,11 @@ object AppModule {
     ): AuthRepository {
         return AuthRepositoryImpl(api, prefs, mainViewModel)
     }
+
+    @Provides
+    @Singleton
+    fun provideAuthViewModel(authRepository: AuthRepository): AuthViewModel {
+        return AuthViewModel(authRepository)
+    }
+
 }

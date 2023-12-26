@@ -44,6 +44,10 @@ interface AuthApi {
     suspend fun changeEmail(
         @Body request: ChangeEmailRequest
     )
+    @POST("check-email")
+    suspend fun checkEmail(
+        @Body request: String
+    ): Boolean
 
     @POST("change-user-bio")
     suspend fun changeUserBio(

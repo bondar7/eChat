@@ -144,6 +144,18 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun checkEmail(email: String): Boolean {
+        return try {
+            authApi.checkEmail(email)
+        } catch (e: HttpException) {
+            e.printStackTrace()
+            false
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     override suspend fun changeUserBio(usernameToFindUser: String, newBio: String) {
         try {
             val request = ChangeUserBioRequest(

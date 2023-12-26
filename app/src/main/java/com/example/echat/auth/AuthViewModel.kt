@@ -19,47 +19,11 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel() {
 
     // result channel
-    private val resultChannel = Channel<AuthResult<Unit>>()
+    val resultChannel = Channel<AuthResult<Unit>>()
     val authResults = resultChannel.receiveAsFlow()
 
     init {
         authenticate()
-    }
-
-    // signing up
-    private val _signUpUsername = mutableStateOf("")
-    val signUpUsername = _signUpUsername
-    fun onUpdateSignUpUsername(newText: String) {
-        _signUpUsername.value = newText
-    }
-
-    private val _emailSignUp = mutableStateOf("")
-    val emailSignUp = _emailSignUp
-    fun onUpdateEmailSignUp(newText: String) {
-        _emailSignUp.value = newText
-    }
-
-    private val _signUpPassword = mutableStateOf("")
-    val signUpPassword = _signUpPassword
-    fun onUpdateSignUpPassword(newText: String) {
-        _signUpPassword.value = newText
-    }
-
-    fun signUp() {
-        viewModelScope.launch {
-            if (
-                _signUpUsername.value.isNotBlank()
-                && _emailSignUp.value.isNotBlank()
-                && signUpPassword.value.isNotBlank()
-            ) {
-                val result = authRepository.signUp(
-                    _signUpUsername.value,
-                    _emailSignUp.value,
-                    signUpPassword.value
-                )
-                resultChannel.send(result)
-            }
-        }
     }
 
     // logging in

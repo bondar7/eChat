@@ -1,4 +1,4 @@
-package com.example.echat.ui.screens.authentication.signIn_Screen
+package com.example.echat.ui.screens.authentication.signup_screen
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -11,11 +11,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,10 +55,15 @@ import com.example.echat.ui.theme.gliroy
 @Composable
 fun SignInScreen(
     viewModel: AuthViewModel = hiltViewModel(),
+    signUpViewModel: SignUpViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
 
     val context = LocalContext.current
+
+    val usernameError = signUpViewModel.usernameError.value
+    val emailError = signUpViewModel.emailError.value
+    val pwError = signUpViewModel.pwError.value
 
     LaunchedEffect(key1 = viewModel, key2 = context) {
         viewModel.authResults.collect {
@@ -90,6 +97,16 @@ fun SignInScreen(
         modifier = Modifier.fillMaxSize()
     ) {
 
+        Box(modifier = Modifier.fillMaxSize().padding(10.dp), contentAlignment = Alignment.TopEnd) {
+            if (signUpViewModel.isLoading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(27.dp),
+                    color = ElementColor,
+                    strokeWidth = 3.3.dp
+                )
+            }
+        }
+
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart) {
             Box(
                 modifier = Modifier
@@ -117,7 +134,7 @@ fun SignInScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Sign In", style = TextStyle(
+                text = "Sign Up", style = TextStyle(
                     fontFamily = gliroy,
                     fontSize = 30.sp,
                     fontWeight = FontWeight.Bold
@@ -127,21 +144,29 @@ fun SignInScreen(
             ColumnItem(
                 "Username",
                 "Create your username",
-                viewModel.signUpUsername.value,
-                { viewModel.onUpdateSignUpUsername(it) })
+                signUpViewModel.username.value
+            ) { signUpViewModel.onUpdateUsername(it) }
+
+            ErrorText(usernameError)
+
             ColumnItem(
                 "Email address",
                 "Enter your email address",
-                viewModel.emailSignUp.value,
-                { viewModel.onUpdateEmailSignUp(it) })
+                signUpViewModel.email.value
+            ) { signUpViewModel.onUpdateEmail(it) }
+
+            ErrorText(emailError)
+
             ColumnItem(
                 "Password",
                 "Create your password",
-                viewModel.signUpPassword.value,
-                { viewModel.onUpdateSignUpPassword(it) })
+                signUpViewModel.password.value
+            ) { signUpViewModel.onUpdatePassword(it) }
+
+            ErrorText(pwError)
 
             TextButton(
-                onClick = { viewModel.signUp() }, modifier = Modifier
+                onClick = { signUpViewModel.signUp() }, modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(
@@ -149,7 +174,7 @@ fun SignInScreen(
                     )
             ) {
                 Text(
-                    text = "Sign In",
+                    text = "Sign Up",
                     modifier = Modifier.padding(vertical = 8.dp),
                     color = Color.White,
                     fontFamily = gliroy,
@@ -177,9 +202,16 @@ fun SignInScreen(
     }
 }
 
+@Composable
+private fun ErrorText(error: String) {
+    if (error.isNotBlank()) {
+        Text(text = error, color = Color.Red, modifier = Modifier.padding(bottom = 10.dp))
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColumnItem(
+private fun ColumnItem(
     text: String,
     placeholder: String,
     value: String,
