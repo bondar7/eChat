@@ -26,25 +26,6 @@ class AuthViewModel @Inject constructor(
         authenticate()
     }
 
-    // logging in
-    private val _logInUsername = mutableStateOf("")
-    val logInUsername = _logInUsername
-    fun onUpdateLogInUsername(newText: String) {
-        _logInUsername.value = newText
-    }
-
-    private val _logInPhone = mutableStateOf("")
-    val logInPhone = _logInPhone
-    fun onUpdateLogInPhone(newText: String) {
-        _logInPhone.value = newText
-    }
-
-    private val _logInPassword = mutableStateOf("")
-    val logInPassword = _logInPassword
-    fun onUpdateLogInPassword(newText: String) {
-        _logInPassword.value = newText
-    }
-
     // errors password
     private val _pwError1 = mutableStateOf("")
     private val _pwError2 = mutableStateOf("")
@@ -62,16 +43,6 @@ class AuthViewModel @Inject constructor(
     val emailError = _emailError
     fun updateEmailError(newText: String) {
         _emailError.value = newText
-    }
-
-
-    fun logIn() {
-        viewModelScope.launch {
-            if (_logInUsername.value.isNotBlank() && _logInPassword.value.isNotBlank()) {
-                val result = authRepository.logIn(_logInUsername.value, _logInPassword.value)
-                resultChannel.send(result)
-            }
-        }
     }
 
     fun changePassword(usernameToFindUser: String, newPassword: String) {

@@ -45,6 +45,7 @@ import androidx.navigation.NavHostController
 import com.example.echat.auth.AuthResult
 import com.example.echat.navigation.Screen
 import com.example.echat.auth.AuthViewModel
+import com.example.echat.ui.screens.authentication.signup_screen.SignUpViewModel
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 
@@ -52,6 +53,7 @@ import com.example.echat.ui.theme.gliroy
 @Composable
 fun LoginScreen(
     viewModel: AuthViewModel = hiltViewModel(),
+    logInViewModel: LogInViewModel = hiltViewModel(),
     navController: NavHostController
 ) {
 
@@ -61,13 +63,14 @@ fun LoginScreen(
         viewModel.authResults.collect {
             when (it) {
                 is AuthResult.Authorized -> {
+                    logInViewModel.setError("")
                     navController.navigate(Screen.ChatsScreen.route) {
                         popUpTo(Screen.LogIn.route) {
                             inclusive = true
                         }
                     }
                 }
-                else -> {}
+                else -> logInViewModel.setError("Incorrect username or password")
             }
         }
     }
@@ -113,21 +116,21 @@ fun LoginScreen(
             ColumnItem(
                 "Username",
                 "Enter your username",
-                viewModel.logInUsername.value,
-                { viewModel.onUpdateLogInUsername(it) })
-//            ColumnItem(
-//                "Phone Number",
-//                "Enter your phone number",
-//                viewModel.phoneTextState.value,
-//                { viewModel.onUpdatePhoneText(it) })
+                logInViewModel.username.value
+            ) { logInViewModel.onUpdateUsername(it) }
             ColumnItem(
                 "Password",
                 "Enter your password",
-                viewModel.logInPassword.value,
-                { viewModel.onUpdateLogInPassword(it) })
+                logInViewModel.password.value
+            ) { logInViewModel.onUpdatePassword(it) }
 
+            if (logInViewModel.error.value.isNotBlank()) {
+                Text(text = logInViewModel.error.value, color = Color.Red)
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+            
             TextButton(
-                onClick = { viewModel.logIn() }, modifier = Modifier
+                onClick = { logInViewModel.logIn() }, modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(
