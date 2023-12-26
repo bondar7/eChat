@@ -386,7 +386,7 @@ private fun checkPw(
             authViewModel.updatePwError1("Field cannot be empty")
         }
 
-        if (isPwCorrect == false && password.isNotBlank()) {
+        if (!isPwCorrect && password.isNotBlank()) {
             authViewModel.updatePwError1("Incorrect password.Try again.")
         }
 

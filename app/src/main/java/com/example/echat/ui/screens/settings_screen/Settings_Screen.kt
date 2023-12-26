@@ -16,9 +16,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.outlined.Language
@@ -27,9 +31,15 @@ import androidx.compose.material.icons.outlined.WbSunny
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,7 +67,6 @@ import com.example.echat.ui.theme.gliroy
 fun SettingsScreen(
     navHostController: NavHostController,
     viewModel: MainViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel(),
 ) {
     val user = viewModel.user
     val prefs = LocalContext.current.getSharedPreferences("prefs", MODE_PRIVATE)
@@ -95,21 +104,21 @@ fun SettingsScreen(
                                 .size(65.dp)
                         )
                         Spacer(modifier = Modifier.width(10.dp))
-                        Column {
-                            Text(
-                                text = user.value?.username ?: "Guest",
-                                fontSize = 18.sp,
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold,
-                                fontFamily = gliroy
-                            )
-                            Text(
-                                text = "online",
-                                color = Color.DarkGray,
-                                fontSize = 12.sp,
-                                fontFamily = gliroy
-                            )
-                        }
+                            Column {
+                                Text(
+                                    text = user.value?.name ?: user.value?.username ?: "Guest",
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 19.sp,
+                                    fontFamily = gliroy
+                                )
+                                Text(
+                                    text = "online",
+                                    color = Color.DarkGray,
+                                    fontSize = 12.sp,
+                                    fontFamily = gliroy
+                                )
+                            }
                     }
                     IconButton(onClick = {
                         prefs.edit().remove("USER").apply()
@@ -154,6 +163,12 @@ fun SettingsScreen(
                         "Tap to change username",
                         onClick = {
                             navHostController.navigate(Screen.EditUsernameScreen.route)
+                        })
+                    AccountInfoItem(
+                        user.value?.name ?: "As default your name is your username",
+                        "Tap to change name",
+                        onClick = {
+                            navHostController.navigate(Screen.EditNameScreen.route)
                         })
                     Box(
                         modifier = Modifier
@@ -244,7 +259,6 @@ fun SettingsScreen(
             }
         }
     }
-
 }
 
 @Composable
@@ -266,7 +280,9 @@ private fun AccountInfoItem(text: String, description: String, onClick: () -> Un
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(start = 10.dp)) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 10.dp)) {
             Text(
                 text = text, style = TextStyle(
                     color = Color.Black,

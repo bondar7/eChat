@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.annotation.RequiresExtension
 import com.echat_backend.data.requests.ChangePasswordRequest
 import com.echat_backend.data.requests.ChangeEmailRequest
+import com.echat_backend.data.requests.ChangeNameRequest
 import com.echat_backend.data.requests.ChangeUsernameRequest
 import com.echat_backend.data.requests.CheckPasswordRequest
 import com.example.echat.MainViewModel
@@ -51,6 +52,7 @@ class AuthRepositoryImpl(
                 token = response.token,
             )
             saveUser(receivedUser)
+            mainViewModel.updateUser(receivedUser)
             AuthResult.Authorized()
         } catch (e: HttpException) {
             if (e.code() == 401) {
@@ -73,6 +75,26 @@ class AuthRepositoryImpl(
             val user = getUser()
             if (user != null) {
                 val updatedUser = user.copy(username = newUsername)
+                removeUser()
+                saveUser(updatedUser)
+                mainViewModel.updateUser(updatedUser)
+            }
+        } catch (e: HttpException) {
+            e.printStackTrace()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    override suspend fun changeName(usernameToFindUser: String, newName: String) {
+        try {
+            val request = ChangeNameRequest(
+                usernameToFindUser = usernameToFindUser,
+                newName = newName
+            )
+            authApi.changeName(request)
+            val user = getUser()
+            if (user != null) {
+                val updatedUser = user.copy(name = newName)
                 removeUser()
                 saveUser(updatedUser)
                 mainViewModel.updateUser(updatedUser)

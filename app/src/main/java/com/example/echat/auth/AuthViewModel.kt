@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -46,7 +48,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun changePassword(usernameToFindUser: String, newPassword: String) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             if (usernameToFindUser.isNotBlank() && newPassword.length > 8) {
                 authRepository.changePassword(usernameToFindUser, newPassword)
             }
@@ -56,16 +58,24 @@ class AuthViewModel @Inject constructor(
     // checking password
     val isPasswordCorrectLiveData: MutableLiveData<Boolean> = MutableLiveData()
     fun checkPassword(usernameToFindUser: String, password: String) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val isPasswordCorrect = authRepository.checkPassword(usernameToFindUser, password)
             isPasswordCorrectLiveData.postValue(isPasswordCorrect)
         }
     }
 
     fun changeUsername(usernameToFindUser: String, newUsername: String) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             if (usernameToFindUser.isNotBlank() && newUsername.length > 3) {
                 authRepository.changeUsername(usernameToFindUser, newUsername)
+            }
+        }
+    }
+
+    fun changeName(usernameToFindUser: String, newName: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (usernameToFindUser.isNotBlank() && newName.length > 3) {
+                authRepository.changeName(usernameToFindUser, newName)
             }
         }
     }
@@ -74,14 +84,14 @@ class AuthViewModel @Inject constructor(
     private val _isUsernameAvailableState: MutableState<Boolean?> = mutableStateOf(null)
     val isUsernameAvailable: MutableState<Boolean?> = _isUsernameAvailableState
     fun checkUsername(username: String) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val isAvailable = authRepository.checkUsername(username)
             _isUsernameAvailableState.value = isAvailable
         }
     }
 
     fun changeEmail(usernameToFindUser: String, newEmail: String) {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             if (usernameToFindUser.isNotBlank() && newEmail.isNotBlank()) {
                 authRepository.changeEmail(usernameToFindUser, newEmail)
             }
@@ -89,7 +99,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun changeUserBio(usernameToFindUser: String, newBio: String = "Bio") {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             if (usernameToFindUser.isNotBlank()) {
                 authRepository.changeUserBio(usernameToFindUser, newBio)
             }
@@ -97,7 +107,7 @@ class AuthViewModel @Inject constructor(
     }
 
     fun authenticate() {
-        viewModelScope.launch {
+        CoroutineScope(Dispatchers.IO).launch {
             val result = authRepository.authenticate()
             resultChannel.send(result)
         }
