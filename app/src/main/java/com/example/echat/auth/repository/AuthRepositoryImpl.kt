@@ -1,16 +1,20 @@
-package com.example.echat.auth
+package com.example.echat.auth.repository
 
 import android.content.SharedPreferences
 import retrofit2.HttpException
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresExtension
-import com.echat_backend.data.requests.ChangePasswordRequest
-import com.echat_backend.data.requests.ChangeEmailRequest
-import com.echat_backend.data.requests.ChangeNameRequest
-import com.echat_backend.data.requests.ChangeUsernameRequest
-import com.echat_backend.data.requests.CheckPasswordRequest
+import com.example.echat.auth.requests.ChangePasswordRequest
+import com.example.echat.auth.requests.ChangeEmailRequest
+import com.example.echat.auth.requests.ChangeNameRequest
+import com.example.echat.auth.requests.ChangeUsernameRequest
+import com.example.echat.auth.requests.CheckPasswordRequest
 import com.example.echat.MainViewModel
+import com.example.echat.auth.AuthResult
+import com.example.echat.auth.api.AuthApi
+import com.example.echat.auth.requests.ChangeUserBioRequest
+import com.example.echat.auth.requests.LogInRequest
+import com.example.echat.auth.requests.SignUpRequest
 import com.example.echat.data.model.User
 import com.google.gson.Gson
 
@@ -101,7 +105,7 @@ class AuthRepositoryImpl(
             }
         } catch (e: HttpException) {
             e.printStackTrace()
-        } catch (e: Exception) {
+        } catch (e: Exception) { 
             e.printStackTrace()
         }
     }

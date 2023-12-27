@@ -261,6 +261,7 @@ fun CheckPassword(
     hideCheckingPassword: () -> Unit,
     navController: NavHostController
 ) {
+
     var textState by remember {
         mutableStateOf("")
     }
@@ -354,9 +355,7 @@ fun CheckPassword(
                         isPasswordCorrect,
                         authViewModel,
                         loading = { isLoading = !isLoading },
-                        whenPasswordCorrect = {
-                            if (isPasswordCorrect) hideCheckingPassword()
-                        }
+                        whenPasswordCorrect = { if (isPasswordCorrect) { hideCheckingPassword() } }
                     )
                 }
                 ) {
@@ -377,9 +376,7 @@ private fun checkPw(
 ) {
     CoroutineScope(Dispatchers.IO).launch {
         loading()
-        if (password.isNotBlank()) {
             authViewModel.checkPassword(username, password)
-        }
         delay(1000)
         loading()
         if (password.isBlank()) {
@@ -391,9 +388,6 @@ private fun checkPw(
         }
 
         whenPasswordCorrect()
-
-        Log.d("IS PASSWORD CORRECT", isPwCorrect.toString())
-
     }
 }
 

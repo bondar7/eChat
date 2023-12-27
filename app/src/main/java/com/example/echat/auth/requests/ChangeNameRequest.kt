@@ -1,9 +1,9 @@
-package com.example.echat.auth
+package com.example.echat.auth.requests
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChangeUserBioRequest(
+data class ChangeNameRequest(
     val usernameToFindUser: String,
-    val newBio: String
+    val newName: String
 )

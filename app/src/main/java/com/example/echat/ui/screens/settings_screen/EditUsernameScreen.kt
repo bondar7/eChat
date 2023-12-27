@@ -63,9 +63,7 @@ fun EditUsernameScreen(
         mutableStateOf(mainViewModel.user.value?.username ?: "")
     }
     val isUsernameAvailable = authViewModel.isUsernameAvailable.value
-    var isLoading by remember {
-        mutableStateOf(false)
-    }
+    val isLoading = authViewModel.isLoading.value
 
     Scaffold(
         containerColor = Color(0xFFECECEC),
@@ -89,7 +87,6 @@ fun EditUsernameScreen(
                             mainViewModel,
                             navController,
                             textState,
-                            loading = { isLoading = !isLoading }
                         )
                     }) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = null)
@@ -138,6 +135,9 @@ fun EditUsernameScreen(
                             value = textState,
                             onValueChange = {
                                 textState = it
+                                if (authViewModel.isUsernameAvailable.value != null) {
+                                    authViewModel.setUsernameAvailableAsNull()
+                                }
                             },
                             textStyle = TextStyle(
                                 fontSize = 17.sp,
@@ -161,11 +161,16 @@ fun EditUsernameScreen(
                 }
             }
 
-            if (isUsernameAvailable != null) {
-                if (!isUsernameAvailable) {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    Text(text = "Username is not available", color = Color.Red)
+            if (authViewModel.usernameError.value.isBlank()) {
+                if (isUsernameAvailable != null) {
+                    if (!isUsernameAvailable) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(text = "Username is not available", color = Color.Red)
+                    }
                 }
+            } else {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = authViewModel.usernameError.value, color = Color.Red)
             }
 
             Column(
@@ -183,7 +188,7 @@ fun EditUsernameScreen(
                     )
                 )
                 Text(
-                    text = "Minimum length is 3 characters.",
+                    text = "Minimum length is 4 characters.",
                     style = TextStyle(
                         fontFamily = gliroy,
                         fontWeight = FontWeight.Medium,
@@ -202,27 +207,15 @@ private fun onConfirm(
     mainViewModel: MainViewModel,
     navController: NavHostController,
     newUsername: String,
-    loading: () -> Unit
 ) {
     val user = mainViewModel.user.value
     if (user != null) {
-        CoroutineScope(Dispatchers.IO).launch {
-            loading()
-            delay(500)
-            authViewModel.checkUsername(newUsername)
-            loading()
-            if (authViewModel.isUsernameAvailable.value != null) {
-                if (authViewModel.isUsernameAvailable.value!!) {
-                    loading()
-                    delay(1000)
-                    authViewModel.changeUsername(user.username, newUsername)
-                    loading()
-                    withContext(Dispatchers.Main) {
-                        navController.popBackStack()
-                    }
-                }
-            }
-
+        authViewModel.changeUsername(
+            usernameToFindUser = user.username,
+            newUsername = newUsername
+        )
+        if (authViewModel.isUsernameAvailable.value == true) {
+            navController.popBackStack()
         }
     }
 }

@@ -1,4 +1,5 @@
 package com.example.echat.ui.screens.settings_screen
+
 import android.annotation.SuppressLint
 import android.util.Patterns
 import androidx.compose.foundation.background
@@ -42,7 +43,7 @@ fun EditEmailScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = "Change Email")},
+                title = { Text(text = "Change Email") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
@@ -88,9 +89,7 @@ private fun EnterNewEmail(
     var textState by remember {
         mutableStateOf("")
     }
-    var isLoading by remember {
-        mutableStateOf(false)
-    }
+    val isLoading = authViewModel.isLoading.value
 
     Column(
         modifier = Modifier
@@ -138,7 +137,6 @@ private fun EnterNewEmail(
                                 newEmail = textState,
                                 authViewModel = authViewModel,
                                 navController = navController,
-                                loading = { isLoading = !isLoading }
                             )
                         }
                     )
@@ -159,7 +157,6 @@ private fun EnterNewEmail(
                         newEmail = textState,
                         authViewModel = authViewModel,
                         navController = navController,
-                        loading = { isLoading = !isLoading }
                     )
                 }) {
                     Text(text = "Confirm", fontSize = 15.sp, color = ElementColor)
@@ -174,24 +171,15 @@ private fun changeEmail(
     newEmail: String,
     authViewModel: AuthViewModel,
     navController: NavHostController,
-    loading: () -> Unit
 ) {
-    val isValidEmail: Boolean = isValidEmail(newEmail)
-    if (isValidEmail) {
-        CoroutineScope(Dispatchers.IO).launch {
-            loading()
-            delay(1000)
-            authViewModel.changeEmail(username, newEmail)
-            loading()
-            withContext(Dispatchers.Main) {
+    CoroutineScope(Dispatchers.IO).launch {
+        authViewModel.changeEmail(username, newEmail)
+        delay(550)
+        withContext(Dispatchers.Main) {
+            if (authViewModel.emailError.value.isBlank()) {
                 navController.popBackStack()
             }
         }
-    } else {
-        authViewModel.updateEmailError("Email is not valid")
     }
 }
 
-private fun isValidEmail(email: String): Boolean {
-    return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-}

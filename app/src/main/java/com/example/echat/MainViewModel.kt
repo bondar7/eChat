@@ -1,16 +1,9 @@
 package com.example.echat
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
-import com.example.echat.auth.AuthRepository
 import com.example.echat.data.model.User
-import com.example.echat.navigation.Screen
-import com.example.echat.ui.screens.BottomNavigationIcon
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

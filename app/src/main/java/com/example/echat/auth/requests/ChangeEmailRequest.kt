@@ -1,4 +1,4 @@
-package com.echat_backend.data.requests
+package com.example.echat.auth.requests
 
 import kotlinx.serialization.Serializable
 

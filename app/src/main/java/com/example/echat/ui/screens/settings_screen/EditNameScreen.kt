@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,9 +61,7 @@ fun EditNameScreen(
     var textState by remember {
         mutableStateOf(mainViewModel.user.value?.name ?: "")
     }
-    var isLoading by remember {
-        mutableStateOf(false)
-    }
+    val isLoading = authViewModel.isLoading.value
 
     Scaffold(
         containerColor = Color(0xFFECECEC),
@@ -86,7 +85,6 @@ fun EditNameScreen(
                             mainViewModel,
                             navController,
                             textState,
-                            loading = { isLoading = !isLoading }
                         )
                     }) {
                         Icon(imageVector = Icons.Default.Done, contentDescription = null)
@@ -142,8 +140,21 @@ fun EditNameScreen(
                             singleLine = true,
                             modifier = Modifier.weight(1f),
                         )
+                        Icon(
+                            imageVector =
+                            if (authViewModel.nameError.value.isBlank()) Icons.Default.Done
+                            else Icons.Default.Close,
+                            contentDescription = null,
+                            tint =
+                            if (authViewModel.nameError.value.isBlank()) Color.Green
+                            else Color.Red,
+                            modifier = Modifier.weight(0.1f)
+                        )
                     }
                 }
+            }
+            if (authViewModel.nameError.value.isNotBlank()) {
+                Text(text = authViewModel.nameError.value, color = Color.Red)
             }
         }
     }
@@ -154,20 +165,21 @@ private fun onConfirm(
     mainViewModel: MainViewModel,
     navController: NavHostController,
     newName: String,
-    loading: () -> Unit
 ) {
     val user = mainViewModel.user.value
-    if (user != null && newName.isNotBlank()) {
+    if (user != null) {
         CoroutineScope(Dispatchers.IO).launch {
-            loading()
-            delay(1000)
-            authViewModel.changeName(user.username, newName)
-            loading()
-            withContext(Dispatchers.Main) {
-                navController.popBackStack()
+            authViewModel.changeName(
+                usernameToFindUser = user.username,
+                newName = newName
+            )
+            delay(550)
+            if (authViewModel.nameError.value.isBlank()) {
+                withContext(Dispatchers.Main) {
+                    navController.popBackStack()
+                }
             }
         }
-
     }
 }
 
