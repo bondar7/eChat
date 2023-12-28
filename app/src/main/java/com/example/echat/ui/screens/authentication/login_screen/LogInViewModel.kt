@@ -15,6 +15,9 @@ class LogInViewModel @Inject constructor(
     private val authViewModel: AuthViewModel
 ) : ViewModel() {
 
+    private val _isLoading = mutableStateOf(false)
+    val isLoading = _isLoading
+
     private val _username = mutableStateOf("")
     val username = _username
 
@@ -36,12 +39,14 @@ class LogInViewModel @Inject constructor(
 
     fun logIn() {
         viewModelScope.launch {
+            _isLoading.value = true
             if (_username.value.isNotBlank() && _password.value.isNotBlank()) {
                 val result = authRepository.logIn(_username.value, _password.value)
                 authViewModel.resultChannel.send(result)
             } else {
                 setError("Fields cannot be blank")
             }
+            _isLoading.value = false
         }
     }
 }

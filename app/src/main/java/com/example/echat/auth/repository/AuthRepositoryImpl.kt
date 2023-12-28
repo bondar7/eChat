@@ -3,7 +3,9 @@ package com.example.echat.auth.repository
 import android.content.SharedPreferences
 import retrofit2.HttpException
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresExtension
+import com.echat_backend.data.requests.ChangeAvatarRequest
 import com.example.echat.auth.requests.ChangePasswordRequest
 import com.example.echat.auth.requests.ChangeEmailRequest
 import com.example.echat.auth.requests.ChangeNameRequest
@@ -51,10 +53,13 @@ class AuthRepositoryImpl(
             val response = authApi.logIn(logInRequest)
             val receivedUser = User(
                 username = response.username,
+                name = response.name,
                 email = response.email,
                 bio = response.bio,
+                avatar = response.avatar,
                 token = response.token,
             )
+            Log.d("RECEIVED AVATAR:", response.avatar.toString())
             saveUser(receivedUser)
             mainViewModel.updateUser(receivedUser)
             AuthResult.Authorized()
@@ -66,6 +71,26 @@ class AuthRepositoryImpl(
             }
         } catch (e: Exception) {
             AuthResult.UnknownError()
+        }
+    }
+
+    override suspend fun changeAvatar(usernameToFindUser: String, avatar: ByteArray) {
+        try {
+            mainViewModel.setIsLoadingAvatar(true)
+            val request = ChangeAvatarRequest(usernameToFindUser, avatar)
+            authApi.changeAvatar(request)
+            val user = getUser()
+            if (user != null) {
+                val updatedUser = user.copy(avatar = avatar)
+                removeUser()
+                saveUser(updatedUser)
+                mainViewModel.updateUser(updatedUser)
+            }
+            mainViewModel.setIsLoadingAvatar(false)
+        } catch (e: HttpException) {
+            e.printStackTrace()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.echat.auth.api
 
+import com.echat_backend.data.requests.ChangeAvatarRequest
 import com.example.echat.auth.responses.AuthResponse
 import com.example.echat.auth.requests.ChangePasswordRequest
 import com.example.echat.auth.requests.ChangeEmailRequest
@@ -25,6 +26,12 @@ interface AuthApi {
     suspend fun logIn(
         @Body request: LogInRequest
     ): AuthResponse
+
+    @POST("change-avatar")
+    suspend fun changeAvatar(
+        @Body request: ChangeAvatarRequest
+    )
+
 
     @POST("check-username")
     suspend fun checkUsername(

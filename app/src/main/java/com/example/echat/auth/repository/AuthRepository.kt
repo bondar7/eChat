@@ -5,6 +5,7 @@ import com.example.echat.auth.AuthResult
 interface AuthRepository {
     suspend fun signUp(username: String, email: String, password: String): AuthResult<Unit>
     suspend fun logIn(username: String, password: String): AuthResult<Unit>
+    suspend fun changeAvatar(usernameToFindUser: String, avatar: ByteArray)
     suspend fun checkUsername(username: String): Boolean
     suspend fun changeUsername(usernameToFindUser: String, newUsername: String)
     suspend fun changeName(usernameToFindUser: String, newName: String)

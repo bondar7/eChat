@@ -10,11 +10,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -78,6 +80,16 @@ fun LoginScreen(
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
+
+        Box(modifier = Modifier.fillMaxSize().padding(10.dp), contentAlignment = Alignment.TopEnd) {
+            if (logInViewModel.isLoading.value) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(27.dp),
+                    color = ElementColor,
+                    strokeWidth = 3.3.dp
+                )
+            }
+        }
 
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopStart) {
             Box(

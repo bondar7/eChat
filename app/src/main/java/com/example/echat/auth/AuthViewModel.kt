@@ -32,6 +32,7 @@ class AuthViewModel @Inject constructor(
         authenticate()
     }
 
+    // PASSWORD FUNCTIONALITY
     // errors password
     private val _pwError1 = mutableStateOf("")
     private val _pwError2 = mutableStateOf("")
@@ -40,7 +41,6 @@ class AuthViewModel @Inject constructor(
     fun updatePwError2(newText: String) {
         _pwError2.value = newText
     }
-
     fun updatePwError1(newText: String) {
         _pwError1.value = newText
     }
@@ -62,7 +62,6 @@ class AuthViewModel @Inject constructor(
             isPasswordCorrectLiveData.postValue(isPasswordCorrect)
         }
     }
-
 
     // USERNAME FUNCTIONALITY .
     // is available
@@ -111,14 +110,17 @@ class AuthViewModel @Inject constructor(
     val nameError = _nameError
     fun changeName(usernameToFindUser: String, newName: String) {
         val error = "Name must contain at least 4 characters"
+        val error2 = "Name can contain maximum 22 characters"
         CoroutineScope(Dispatchers.IO).launch {
             _isLoading.value = true
             delay(500)
-            if (usernameToFindUser.isNotBlank() && newName.length >= 4) {
+            if (newName.length <= 4) {
+                _nameError.value = error
+            } else if (newName.length > 22) {
+                _nameError.value = error2
+            } else if (usernameToFindUser.isNotBlank()) {
                 authRepository.changeName(usernameToFindUser, newName)
                 _nameError.value = ""
-            } else {
-                _nameError.value = error
             }
             _isLoading.value = false
         }
@@ -151,6 +153,15 @@ class AuthViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             if (usernameToFindUser.isNotBlank()) {
                 authRepository.changeUserBio(usernameToFindUser, newBio)
+            }
+        }
+    }
+
+    // AVATAR
+    fun changeAvatar(usernameToFindUser: String, avatar: ByteArray) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (usernameToFindUser.isNotBlank()) {
+                authRepository.changeAvatar(usernameToFindUser, avatar)
             }
         }
     }

@@ -29,6 +29,12 @@ class MainViewModel @Inject constructor(
         _user.value = user
     }
 
+    private val _isAvatarLoading = mutableStateOf(false)
+    val isAvatarLoading = _isAvatarLoading
+    fun setIsLoadingAvatar(isLoading: Boolean) {
+        _isAvatarLoading.value = isLoading
+    }
+
   private fun loadUser(): User? {
         val gson = Gson()
         val userJson = prefs.getString("USER", null)

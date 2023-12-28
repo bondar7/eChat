@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -74,7 +75,7 @@ fun EditPasswordScreen(
                title = { Text(text = "Change Password")},
                navigationIcon = {
                    IconButton(onClick = { navController.popBackStack() }) {
-                       Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                       Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
                    }
                },
                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -376,7 +377,7 @@ private fun checkPw(
 ) {
     CoroutineScope(Dispatchers.IO).launch {
         loading()
-            authViewModel.checkPassword(username, password)
+        authViewModel.checkPassword(username, password)
         delay(1000)
         loading()
         if (password.isBlank()) {

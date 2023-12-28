@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -99,7 +100,7 @@ fun ChatsScreen(viewModel: MainViewModel = hiltViewModel(), navHostController: N
             // Chats List
             val chats = List(20) {
                ChatModel(
-                    image = painterResource(id = R.drawable.avatar),
+                    image = Icons.Default.Person,
                     username = "Maksim Bondar",
                     lastMessage = "I love them! Lets go.",
                     isUserOnline = true,

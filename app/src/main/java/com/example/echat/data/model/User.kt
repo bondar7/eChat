@@ -5,5 +5,6 @@ data class User(
     val name: String? = null,
     val email: String,
     val bio: String = "Bio",
+    val avatar: ByteArray? = null,
     val token: String,
 )
