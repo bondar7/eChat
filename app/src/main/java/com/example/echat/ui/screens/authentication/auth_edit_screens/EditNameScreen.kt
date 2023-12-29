@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
-import com.example.echat.auth.AuthViewModel
+import com.example.echat.server.auth.AuthViewModel
 import com.example.echat.ui.theme.ElementColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -11,17 +11,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val prefs: SharedPreferences
-): ViewModel(
-) {
-
-    // Search bar
-    private val _textState = mutableStateOf("")
-    val textState = _textState
-
-    // onUpdateText
-    fun onUpdateText(newText: String) {
-        _textState.value = newText
-    }
+): ViewModel() {
 
     private val _user = mutableStateOf(loadUser())
     val user = _user

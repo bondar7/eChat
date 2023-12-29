@@ -4,8 +4,8 @@ import android.util.Patterns
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.echat.auth.repository.AuthRepository
-import com.example.echat.auth.AuthViewModel
+import com.example.echat.server.auth.repository.AuthRepository
+import com.example.echat.server.auth.AuthViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

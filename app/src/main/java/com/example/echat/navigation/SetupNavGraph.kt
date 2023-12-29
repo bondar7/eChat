@@ -6,7 +6,9 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -19,6 +21,7 @@ import com.example.echat.ui.screens.authentication.auth_edit_screens.EditEmailSc
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditNameScreen
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditPasswordScreen
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditUsernameScreen
+import com.example.echat.ui.screens.search_users_screen.SearchUsersScreen
 import com.example.echat.ui.screens.settings_screen.SettingsScreen
 import com.google.gson.Gson
 
@@ -97,10 +100,13 @@ fun SetupNavGraph(
         ) {
             EditEmailScreen(navController = navController)
         }
+        composable(
+            Screen.SearchUsersScreen.route,
+        ) {
+            SearchUsersScreen(navController)
+        }
     }
 }
-
-
 private val slideOutHorizontally = slideOutHorizontally(
     targetOffsetX = { 2000 },
     animationSpec = tween(

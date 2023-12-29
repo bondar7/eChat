@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
-import com.example.echat.auth.AuthViewModel
+import com.example.echat.server.auth.AuthViewModel
 import com.example.echat.ui.navigation_bar.BottomNavigationBar
 import com.example.echat.ui.search_bar.SearchBar
 import com.example.echat.ui.theme.MainBackgroundColor
@@ -43,6 +43,7 @@ import com.example.echat.utils.observeAuthResultsAndNavigate
 fun ChatsScreen(
     viewModel: MainViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
+    chatsViewModel: ChatsViewModel = hiltViewModel(),
     navHostController: NavHostController
 ) {
 
@@ -93,6 +94,8 @@ fun ChatsScreen(
 
             // Search Bar
             SearchBar(
+                textState = chatsViewModel.searchTextState.value,
+                onTextChange = { chatsViewModel.onSearchTextStateChange(it) },
                 onSearch = {}
             )
 

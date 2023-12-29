@@ -1,15 +1,15 @@
-package com.example.echat.auth.api
+package com.example.echat.server.auth.api
 
 import com.echat_backend.data.requests.ChangeAvatarRequest
-import com.example.echat.auth.responses.AuthResponse
-import com.example.echat.auth.requests.ChangePasswordRequest
-import com.example.echat.auth.requests.ChangeEmailRequest
-import com.example.echat.auth.requests.ChangeNameRequest
-import com.example.echat.auth.requests.ChangeUsernameRequest
-import com.example.echat.auth.requests.CheckPasswordRequest
-import com.example.echat.auth.requests.ChangeUserBioRequest
-import com.example.echat.auth.requests.LogInRequest
-import com.example.echat.auth.requests.SignUpRequest
+import com.example.echat.server.auth.responses.AuthResponse
+import com.example.echat.server.auth.requests.ChangePasswordRequest
+import com.example.echat.server.auth.requests.ChangeEmailRequest
+import com.example.echat.server.auth.requests.ChangeNameRequest
+import com.example.echat.server.auth.requests.ChangeUsernameRequest
+import com.example.echat.server.auth.requests.CheckPasswordRequest
+import com.example.echat.server.auth.requests.ChangeUserBioRequest
+import com.example.echat.server.auth.requests.LogInRequest
+import com.example.echat.server.auth.requests.SignUpRequest
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header

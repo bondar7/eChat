@@ -1,4 +1,4 @@
-package com.example.echat.auth.responses
+package com.example.echat.server.auth.responses
 
 import kotlinx.serialization.Serializable
 

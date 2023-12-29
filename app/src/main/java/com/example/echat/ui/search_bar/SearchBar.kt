@@ -1,5 +1,8 @@
 package com.example.echat.ui.search_bar
 
+import android.app.Activity
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -26,13 +30,19 @@ import com.example.echat.MainViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
-    viewModel: MainViewModel = hiltViewModel(),
+    textState: String,
+    onTextChange: (String) -> Unit,
     placeholderText: String = "Search",
     onSearch: () -> Unit,
 ) {
+    val context = LocalContext.current
+
     OutlinedTextField(
-        value = viewModel.textState.value,
-        onValueChange = { viewModel.onUpdateText(it) },
+        value = textState,
+        onValueChange = {
+            onTextChange(it)
+            onSearch()
+                        },
         singleLine = true,
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = Color.Gray)
@@ -42,7 +52,7 @@ fun SearchBar(
             .fillMaxWidth()
             .padding(horizontal = 5.dp)
             .clip(RoundedCornerShape(15.dp)),
-        textStyle = TextStyle(fontSize = 18.sp),
+        textStyle = TextStyle(fontSize = 18.sp, color = Color.Black),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             containerColor = Color(0xFFF7F7FA),
             unfocusedBorderColor = Color.Transparent,
@@ -52,7 +62,19 @@ fun SearchBar(
             imeAction = ImeAction.Search
         ),
         keyboardActions = KeyboardActions(
-            onSearch = { onSearch() }
+            onSearch = {
+                hideKeyboard(context)
+                onSearch()
+            }
         )
     )
+}
+private fun hideKeyboard(context: Context) {
+    val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val currentFocusedView = (context as Activity).currentFocus
+    currentFocusedView?.let {
+        inputMethodManager.hideSoftInputFromWindow(
+            currentFocusedView.windowToken, InputMethodManager.HIDE_NOT_ALWAYS
+        )
+    }
 }

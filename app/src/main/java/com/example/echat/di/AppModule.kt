@@ -4,10 +4,13 @@ import android.app.Application
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.echat.MainViewModel
-import com.example.echat.auth.api.AuthApi
-import com.example.echat.auth.repository.AuthRepository
-import com.example.echat.auth.repository.AuthRepositoryImpl
-import com.example.echat.auth.AuthViewModel
+import com.example.echat.server.auth.api.AuthApi
+import com.example.echat.server.auth.repository.AuthRepository
+import com.example.echat.server.auth.repository.AuthRepositoryImpl
+import com.example.echat.server.auth.AuthViewModel
+import com.example.echat.server.main.api.MainApi
+import com.example.echat.server.main.repository.MainRepository
+import com.example.echat.server.main.repository.MainRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,6 +31,15 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AuthApi::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideMainApi(): MainApi {
+        return Retrofit.Builder()
+            .baseUrl("http://192.168.1.8:8080/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(MainApi::class.java)
     }
 
     @Provides
@@ -50,6 +62,14 @@ object AppModule {
         mainViewModel: MainViewModel,
     ): AuthRepository {
         return AuthRepositoryImpl(api, prefs, mainViewModel)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMainRepository(
+        api: MainApi,
+    ): MainRepository {
+        return MainRepositoryImpl(api)
     }
 
     @Provides

@@ -4,8 +4,8 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
-import com.example.echat.auth.AuthResult
-import com.example.echat.auth.AuthViewModel
+import com.example.echat.server.auth.AuthResult
+import com.example.echat.server.auth.AuthViewModel
 import com.example.echat.navigation.Screen
 
 suspend fun observeAuthResultsAndNavigate(

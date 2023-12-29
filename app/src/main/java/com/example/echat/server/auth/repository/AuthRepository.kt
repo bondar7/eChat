@@ -1,6 +1,6 @@
-package com.example.echat.auth.repository
+package com.example.echat.server.auth.repository
 
-import com.example.echat.auth.AuthResult
+import com.example.echat.server.auth.AuthResult
 
 interface AuthRepository {
     suspend fun signUp(username: String, email: String, password: String): AuthResult<Unit>

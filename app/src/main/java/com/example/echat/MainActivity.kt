@@ -10,7 +10,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.echat.navigation.SetupNavGraph
-import com.example.echat.auth.AuthViewModel
+import com.example.echat.server.auth.AuthViewModel
 import com.example.echat.ui.theme.EChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 

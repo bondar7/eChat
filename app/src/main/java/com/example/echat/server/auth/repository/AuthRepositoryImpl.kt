@@ -1,4 +1,4 @@
-package com.example.echat.auth.repository
+package com.example.echat.server.auth.repository
 
 import android.content.SharedPreferences
 import retrofit2.HttpException
@@ -6,17 +6,17 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresExtension
 import com.echat_backend.data.requests.ChangeAvatarRequest
-import com.example.echat.auth.requests.ChangePasswordRequest
-import com.example.echat.auth.requests.ChangeEmailRequest
-import com.example.echat.auth.requests.ChangeNameRequest
-import com.example.echat.auth.requests.ChangeUsernameRequest
-import com.example.echat.auth.requests.CheckPasswordRequest
+import com.example.echat.server.auth.requests.ChangePasswordRequest
+import com.example.echat.server.auth.requests.ChangeEmailRequest
+import com.example.echat.server.auth.requests.ChangeNameRequest
+import com.example.echat.server.auth.requests.ChangeUsernameRequest
+import com.example.echat.server.auth.requests.CheckPasswordRequest
 import com.example.echat.MainViewModel
-import com.example.echat.auth.AuthResult
-import com.example.echat.auth.api.AuthApi
-import com.example.echat.auth.requests.ChangeUserBioRequest
-import com.example.echat.auth.requests.LogInRequest
-import com.example.echat.auth.requests.SignUpRequest
+import com.example.echat.server.auth.AuthResult
+import com.example.echat.server.auth.api.AuthApi
+import com.example.echat.server.auth.requests.ChangeUserBioRequest
+import com.example.echat.server.auth.requests.LogInRequest
+import com.example.echat.server.auth.requests.SignUpRequest
 import com.example.echat.data.model.User
 import com.google.gson.Gson
 

@@ -53,7 +53,7 @@ fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navControlle
         BottomNavigationIcon(
             selectedIcon = Icons.Default.Search,
             unselectedIcon = Icons.Outlined.Search,
-            route = ""
+            route = Screen.SearchUsersScreen.route
         ),
         BottomNavigationIcon(
             selectedIcon = Icons.Default.Group,
