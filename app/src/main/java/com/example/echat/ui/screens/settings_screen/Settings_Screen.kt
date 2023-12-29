@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -26,7 +25,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.outlined.WbSunny
@@ -63,9 +61,8 @@ import coil.compose.rememberImagePainter
 import com.example.echat.MainViewModel
 import com.example.echat.R
 import com.example.echat.navigation.Screen
-import com.example.echat.ui.screens.BottomNavigationBar
-import com.example.echat.auth.AuthViewModel
-import com.example.echat.ui.PhotoPicker
+import com.example.echat.ui.navigation_bar.BottomNavigationBar
+import com.example.echat.ui.photo_picker.PhotoPicker
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 
@@ -390,7 +387,7 @@ fun SettingsScreen(
 
 @Composable
 private fun SettingsItem(icon: ImageVector, text: String) {
-    Row {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         Icon(imageVector = icon, contentDescription = null)
         Spacer(modifier = Modifier.width(20.dp))
         Text(text = text, fontSize = 15.sp, fontFamily = gliroy)

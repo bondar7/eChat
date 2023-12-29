@@ -14,11 +14,11 @@ import com.example.echat.data.model.User
 import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
 import com.example.echat.ui.screens.authentication.signup_screen.SignInScreen
 import com.example.echat.ui.screens.chats_screen.ChatsScreen
-import com.example.echat.ui.screens.settings_screen.EditBioScreen
-import com.example.echat.ui.screens.settings_screen.EditEmailScreen
-import com.example.echat.ui.screens.settings_screen.EditNameScreen
-import com.example.echat.ui.screens.settings_screen.EditPasswordScreen
-import com.example.echat.ui.screens.settings_screen.EditUsernameScreen
+import com.example.echat.ui.screens.authentication.auth_edit_screens.EditBioScreen
+import com.example.echat.ui.screens.authentication.auth_edit_screens.EditEmailScreen
+import com.example.echat.ui.screens.authentication.auth_edit_screens.EditNameScreen
+import com.example.echat.ui.screens.authentication.auth_edit_screens.EditPasswordScreen
+import com.example.echat.ui.screens.authentication.auth_edit_screens.EditUsernameScreen
 import com.example.echat.ui.screens.settings_screen.SettingsScreen
 import com.google.gson.Gson
 

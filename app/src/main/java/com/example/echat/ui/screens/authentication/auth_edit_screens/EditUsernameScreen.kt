@@ -1,7 +1,6 @@
-package com.example.echat.ui.screens.settings_screen
+package com.example.echat.ui.screens.authentication.auth_edit_screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,16 +40,12 @@ import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
 import com.example.echat.auth.AuthViewModel
 import com.example.echat.ui.theme.ElementColor
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.echat.ui.theme.gliroy
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditNameScreen(
+fun EditUsernameScreen(
     topBarTitle: String,
     blueTitle: String,
     navController: NavHostController,
@@ -60,8 +54,9 @@ fun EditNameScreen(
 ) {
 
     var textState by remember {
-        mutableStateOf(mainViewModel.user.value?.name ?: "")
+        mutableStateOf(mainViewModel.user.value?.username ?: "")
     }
+    val isUsernameAvailable = authViewModel.isUsernameAvailable.value
     val isLoading = authViewModel.isLoading.value
 
     Scaffold(
@@ -134,6 +129,9 @@ fun EditNameScreen(
                             value = textState,
                             onValueChange = {
                                 textState = it
+                                if (authViewModel.isUsernameAvailable.value != null) {
+                                    authViewModel.setUsernameAvailableAsNull()
+                                }
                             },
                             textStyle = TextStyle(
                                 fontSize = 17.sp,
@@ -141,22 +139,59 @@ fun EditNameScreen(
                             singleLine = true,
                             modifier = Modifier.weight(1f),
                         )
-                        Icon(
-                            imageVector =
-                            if (authViewModel.nameError.value.isBlank()) Icons.Default.Done
-                            else Icons.Default.Close,
-                            contentDescription = null,
-                            tint =
-                            if (authViewModel.nameError.value.isBlank()) Color.Green
-                            else Color.Red,
-                            modifier = Modifier.weight(0.1f)
-                        )
+                        if (isUsernameAvailable != null) {
+                            Icon(
+                                imageVector =
+                                if (isUsernameAvailable) Icons.Default.Done
+                                else Icons.Default.Close,
+                                contentDescription = null,
+                                tint =
+                                if (isUsernameAvailable) Color.Green
+                                else Color.Red,
+                                modifier = Modifier.weight(0.1f).size(20.dp)
+                            )
+                        }
                     }
                 }
             }
-            if (authViewModel.nameError.value.isNotBlank()) {
-                Text(text = authViewModel.nameError.value, color = Color.Red)
+
+            if (authViewModel.usernameError.value.isBlank()) {
+                if (isUsernameAvailable != null) {
+                    if (!isUsernameAvailable) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(text = "Username is not available", color = Color.Red)
+                    }
+                }
+            } else {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(text = authViewModel.usernameError.value, color = Color.Red)
             }
+
+            Column(
+                modifier = Modifier
+                    .padding(15.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Text(
+                    text = "Your username is used to find you by this username and contact you without needing your phone number.",
+                    style = TextStyle(
+                        fontFamily = gliroy,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp,
+                        color = Color.DarkGray
+                    )
+                )
+                Text(
+                    text = "Minimum length is 4 characters.",
+                    style = TextStyle(
+                        fontFamily = gliroy,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp,
+                        color = Color.DarkGray
+                    )
+                )
+            }
+
         }
     }
 }
@@ -165,21 +200,16 @@ private fun onConfirm(
     authViewModel: AuthViewModel,
     mainViewModel: MainViewModel,
     navController: NavHostController,
-    newName: String,
+    newUsername: String,
 ) {
     val user = mainViewModel.user.value
     if (user != null) {
-        CoroutineScope(Dispatchers.IO).launch {
-            authViewModel.changeName(
-                usernameToFindUser = user.username,
-                newName = newName
-            )
-            delay(550)
-            if (authViewModel.nameError.value.isBlank()) {
-                withContext(Dispatchers.Main) {
-                    navController.popBackStack()
-                }
-            }
+        authViewModel.changeUsername(
+            usernameToFindUser = user.username,
+            newUsername = newUsername
+        )
+        if (authViewModel.isUsernameAvailable.value == true) {
+            navController.popBackStack()
         }
     }
 }

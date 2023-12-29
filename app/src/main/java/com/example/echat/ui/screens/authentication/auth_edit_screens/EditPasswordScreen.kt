@@ -1,7 +1,6 @@
-package com.example.echat.ui.screens.settings_screen
+package com.example.echat.ui.screens.authentication.auth_edit_screens
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -40,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -71,20 +70,23 @@ fun EditPasswordScreen(
 
     Scaffold(
         topBar = {
-           CenterAlignedTopAppBar(
-               title = { Text(text = "Change Password")},
-               navigationIcon = {
-                   IconButton(onClick = { navController.popBackStack() }) {
-                       Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
-                   }
-               },
-               colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                   containerColor = Color(0xFF70ABFC),
-                   titleContentColor = Color.White,
-                   navigationIconContentColor = Color.White,
-                   actionIconContentColor = Color.White
-               )
-           )
+            CenterAlignedTopAppBar(
+                title = { Text(text = "Change Password") },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = null
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    containerColor = Color(0xFF70ABFC),
+                    titleContentColor = Color.White,
+                    navigationIconContentColor = Color.White,
+                    actionIconContentColor = Color.White
+                )
+            )
         }
     ) {
         Column(
@@ -139,7 +141,12 @@ private fun EnterNewPassword(
                 .padding(20.dp),
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "New password", fontSize = 19.sp, fontWeight = FontWeight.Medium)
+                Text(
+                    text = "New password",
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -153,77 +160,46 @@ private fun EnterNewPassword(
                 Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OutlinedTextField(
-                    value = textState,
-                    onValueChange = { textState = it },
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    placeholder = { Text(text = "New password") },
-                    trailingIcon = {
-                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                            Icon(
-                                imageVector =
-                                if (isPasswordVisible) Icons.Default.VisibilityOff
-                                else Icons.Default.Visibility,
-                                contentDescription = null
-                            )
-                        }
+                NewPasswordField(
+                    textState = textState,
+                    placeholderText = "New password",
+                    isPasswordVisible = isPasswordVisible,
+                    onTextChange = { textState = it },
+                    onDone = {
+                        changePw(
+                            textState = textState,
+                            textState2 = textState2,
+                            username = username,
+                            authViewModel = authViewModel,
+                            navController = navController,
+                            loading = {
+                                isLoading = !isLoading
+                            }
+                        )
                     },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        containerColor = Color(0xFFF7F7FA)
-                    ),
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            changePw(
-                                textState = textState,
-                                textState2 = textState2,
-                                username = username,
-                                authViewModel = authViewModel,
-                                navController = navController,
-                                loading = {
-                                    isLoading = !isLoading
-                                }
-                            )
-                        }
-                    )
+                    onTrailingIcon = { isPasswordVisible = !isPasswordVisible }
                 )
-
                 Spacer(modifier = Modifier.height(10.dp))
-                OutlinedTextField(
-                    value = textState2,
-                    onValueChange = { textState2 = it },
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    placeholder = { Text(text = "Repeat password") },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        containerColor = Color(0xFFF7F7FA)
-                    ),
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            changePw(
-                                textState = textState,
-                                textState2 = textState2,
-                                username = username,
-                                authViewModel = authViewModel,
-                                navController = navController,
-                                loading = {
-                                    isLoading = !isLoading
-                                }
-                            )
-                        }
-                    )
+                NewPasswordField(
+                    textState = textState2,
+                    placeholderText = "Repeat password",
+                    isPasswordVisible = isPasswordVisible,
+                    onTextChange = { textState2 = it },
+                    onDone = {
+                        changePw(
+                            textState = textState,
+                            textState2 = textState2,
+                            username = username,
+                            authViewModel = authViewModel,
+                            navController = navController,
+                            loading = {
+                                isLoading = !isLoading
+                            }
+                        )
+                    },
+                    onTrailingIcon = {
+                        isPasswordVisible = !isPasswordVisible
+                    }
                 )
                 if (authViewModel.pwError2.value.isNotBlank()) {
                     Spacer(modifier = Modifier.height(10.dp))
@@ -285,7 +261,12 @@ fun CheckPassword(
                 .padding(20.dp),
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "Enter your password", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                Text(
+                    text = "Enter your password",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -296,46 +277,24 @@ fun CheckPassword(
             }
             Spacer(modifier = Modifier.height(20.dp))
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                OutlinedTextField(
-                    value = textState,
-                    onValueChange = { textState = it },
-                    modifier = Modifier
-                        .padding(horizontal = 10.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxWidth()
-                        .height(55.dp),
-                    placeholder = { Text(text = "Your current password") },
-                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                            Icon(
-                                imageVector =
-                                if (isPasswordVisible) Icons.Default.VisibilityOff
-                                else Icons.Default.Visibility,
-                                contentDescription = null
-                            )
-                        }
+                NewPasswordField(
+                    textState = textState,
+                    placeholderText = "Your current password",
+                    isPasswordVisible = isPasswordVisible,
+                    onTextChange = { textState = it },
+                    onDone = {
+                        checkPw(
+                            username,
+                            textState,
+                            isPasswordCorrect,
+                            authViewModel,
+                            loading = { isLoading = !isLoading },
+                            whenPasswordCorrect = {
+                                if (isPasswordCorrect) hideCheckingPassword()
+                            }
+                        )
                     },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedBorderColor = Color.Transparent,
-                        containerColor = Color(0xFFF7F7FA)
-                    ),
-                    singleLine = true,
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            checkPw(
-                                username,
-                                textState,
-                                isPasswordCorrect,
-                                authViewModel,
-                                loading = { isLoading = !isLoading },
-                                whenPasswordCorrect = {
-                                    if (isPasswordCorrect) hideCheckingPassword()
-                                }
-                            )
-                        }
-                    )
+                    onTrailingIcon = { isPasswordVisible = !isPasswordVisible }
                 )
                 if (authViewModel.pwError1.value.isNotBlank()) {
                     Spacer(modifier = Modifier.height(10.dp))
@@ -356,7 +315,11 @@ fun CheckPassword(
                         isPasswordCorrect,
                         authViewModel,
                         loading = { isLoading = !isLoading },
-                        whenPasswordCorrect = { if (isPasswordCorrect) { hideCheckingPassword() } }
+                        whenPasswordCorrect = {
+                            if (isPasswordCorrect) {
+                                hideCheckingPassword()
+                            }
+                        }
                     )
                 }
                 ) {
@@ -415,4 +378,47 @@ private fun changePw(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun NewPasswordField(
+    textState: String,
+    placeholderText: String,
+    isPasswordVisible: Boolean,
+    onTextChange: (newText: String) -> Unit,
+    onDone: () -> Unit,
+    onTrailingIcon: () -> Unit
+) {
+    OutlinedTextField(
+        value = textState,
+        onValueChange = { onTextChange(it) },
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .fillMaxWidth()
+            .height(55.dp),
+        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        placeholder = { Text(text = placeholderText, color = Color.DarkGray, fontSize = 16.sp) },
+        textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            unfocusedBorderColor = Color.Transparent,
+            focusedBorderColor = Color.Transparent,
+            containerColor = Color(0xFFF7F7FA)
+        ),
+        singleLine = true,
+        keyboardActions = KeyboardActions(
+            onDone = { onDone() }
+        ),
+        trailingIcon = {
+            IconButton(onClick = { onTrailingIcon() }) {
+                Icon(
+                    imageVector =
+                    if (isPasswordVisible) Icons.Default.VisibilityOff
+                    else Icons.Default.Visibility,
+                    contentDescription = null,
+                    tint = Color.DarkGray
+                )
+            }
+        },
+    )
 }

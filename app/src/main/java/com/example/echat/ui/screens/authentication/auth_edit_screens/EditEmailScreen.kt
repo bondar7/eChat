@@ -1,20 +1,19 @@
-package com.example.echat.ui.screens.settings_screen
+package com.example.echat.ui.screens.authentication.auth_edit_screens
 
 import android.annotation.SuppressLint
-import android.util.Patterns
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +46,10 @@ fun EditEmailScreen(
                 title = { Text(text = "Change Email") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = null
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -103,7 +105,12 @@ private fun EnterNewEmail(
                 .padding(20.dp),
         ) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(text = "New Email", fontSize = 19.sp, fontWeight = FontWeight.Medium)
+                Text(
+                    text = "New Email",
+                    fontSize = 19.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
                 if (isLoading) {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -124,7 +131,8 @@ private fun EnterNewEmail(
                         .clip(RoundedCornerShape(10.dp))
                         .fillMaxWidth()
                         .height(55.dp),
-                    placeholder = { Text(text = "New Email") },
+                    placeholder = { Text(text = "New Email", color = Color.Gray) },
+                    textStyle = TextStyle(color = Color.Black),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
                         unfocusedBorderColor = Color.Transparent,
                         focusedBorderColor = Color.Transparent,
