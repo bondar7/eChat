@@ -234,12 +234,14 @@ class AuthRepositoryImpl(
             authApi.authenticate("Bearer ${user.token}")
             AuthResult.Authorized()
         } catch (e: HttpException) {
+            removeUser()
             if (e.code() == 401) {
                 AuthResult.Unauthorized()
             } else {
                 AuthResult.UnknownError()
             }
         } catch (e: Exception) {
+            removeUser()
             AuthResult.UnknownError()
         }
     }

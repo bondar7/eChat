@@ -32,12 +32,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -49,15 +51,32 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
 import com.example.echat.R
+import com.example.echat.auth.AuthViewModel
 import com.example.echat.ui.screens.BottomNavigationBar
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.MainBackgroundColor
 import com.example.echat.ui.theme.gliroy
+import com.example.echat.utils.observeAuthResultsAndNavigate
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatsScreen(viewModel: MainViewModel = hiltViewModel(), navHostController: NavHostController) {
+fun ChatsScreen(
+    viewModel: MainViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
+    navHostController: NavHostController
+) {
+
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = viewModel, key2 = context) {
+        observeAuthResultsAndNavigate(
+            authViewModel,
+            navHostController,
+            context
+        )
+    }
+
     Scaffold(
         containerColor = MainBackgroundColor,
         bottomBar = { BottomNavigationBar(navController = navHostController) }
@@ -95,11 +114,11 @@ fun ChatsScreen(viewModel: MainViewModel = hiltViewModel(), navHostController: N
 
             // Search Bar
             SearchBar(viewModel)
-            
+
             Spacer(modifier = Modifier.height(25.dp))
             // Chats List
             val chats = List(20) {
-               ChatModel(
+                ChatModel(
                     image = Icons.Default.Person,
                     username = "Maksim Bondar",
                     lastMessage = "I love them! Lets go.",

@@ -50,6 +50,7 @@ import com.example.echat.navigation.Screen
 import com.example.echat.auth.AuthViewModel
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
+import com.example.echat.utils.observeAuthResultsAndNavigate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,31 +67,11 @@ fun SignInScreen(
     val pwError = signUpViewModel.pwError.value
 
     LaunchedEffect(key1 = viewModel, key2 = context) {
-        viewModel.authResults.collect {
-            when (it) {
-                is AuthResult.Authorized -> {
-                    navController.navigate(Screen.ChatsScreen.route) {
-                        popUpTo(Screen.SignIn.route) {
-                            inclusive = true
-                        }
-                    }
-                }
-                is AuthResult.Unauthorized -> {
-                    Toast.makeText(
-                        context,
-                        "You are not authorized",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-                is AuthResult.UnknownError -> {
-                    Toast.makeText(
-                        context,
-                        "An unknown error occured",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
+        observeAuthResultsAndNavigate(
+            viewModel,
+            navController,
+            context
+        )
     }
 
     Surface(

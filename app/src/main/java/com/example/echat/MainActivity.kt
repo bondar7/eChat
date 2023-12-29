@@ -27,13 +27,14 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         installSplashScreen().apply {
-            // Perform actions during the splash screen
+        // Perform actions during the splash screen //
         }
 
         setContent {
             EChatTheme {
                  navController = rememberNavController()
-                SetupNavGraph(navController = navController)
+                val prefs = getSharedPreferences("prefs", MODE_PRIVATE)
+                SetupNavGraph(navController = navController, prefs = prefs)
             }
         }
     }

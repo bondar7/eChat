@@ -1,5 +1,6 @@
 package com.example.echat.navigation
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.Composable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -9,6 +10,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.echat.data.model.User
 import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
 import com.example.echat.ui.screens.authentication.signup_screen.SignInScreen
 import com.example.echat.ui.screens.chats_screen.ChatsScreen
@@ -18,13 +20,18 @@ import com.example.echat.ui.screens.settings_screen.EditNameScreen
 import com.example.echat.ui.screens.settings_screen.EditPasswordScreen
 import com.example.echat.ui.screens.settings_screen.EditUsernameScreen
 import com.example.echat.ui.screens.settings_screen.SettingsScreen
+import com.google.gson.Gson
 
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
+    prefs: SharedPreferences
 ) {
 
-    NavHost(navController = navController, startDestination = Screen.SignIn.route) {
+    NavHost(
+        navController = navController,
+        startDestination = if (getUser(prefs) == null) Screen.SignIn.route else Screen.ChatsScreen.route
+    ) {
         composable(
             Screen.SignIn.route,
             exitTransition = {
@@ -108,3 +115,13 @@ private val slideInHorizontally = slideInHorizontally(
         easing = FastOutSlowInEasing
     )
 )
+
+private fun getUser(prefs: SharedPreferences): User? {
+    val gson = Gson()
+    val userJson = prefs.getString("USER", null)
+    return if (userJson != null) {
+        gson.fromJson(userJson, User::class.java)
+    } else {
+        null
+    }
+}

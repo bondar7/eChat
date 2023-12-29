@@ -168,7 +168,7 @@ class AuthViewModel @Inject constructor(
 
 
     // AUTHENTICATION
-   private fun authenticate() {
+    fun authenticate() {
         CoroutineScope(Dispatchers.IO).launch {
             val result = authRepository.authenticate()
             resultChannel.send(result)
