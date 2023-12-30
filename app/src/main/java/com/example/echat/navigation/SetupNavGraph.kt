@@ -9,9 +9,13 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.example.echat.data.model.Person
 import com.example.echat.data.model.User
 import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
 import com.example.echat.ui.screens.authentication.signup_screen.SignInScreen
@@ -21,14 +25,17 @@ import com.example.echat.ui.screens.authentication.auth_edit_screens.EditEmailSc
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditNameScreen
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditPasswordScreen
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditUsernameScreen
+import com.example.echat.ui.screens.search_users_screen.DetailedUserScreen
 import com.example.echat.ui.screens.search_users_screen.SearchUsersScreen
+import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
 import com.example.echat.ui.screens.settings_screen.SettingsScreen
 import com.google.gson.Gson
 
 @Composable
 fun SetupNavGraph(
     navController: NavHostController,
-    prefs: SharedPreferences
+    prefs: SharedPreferences,
+    searchUsersViewModel: SearchUsersViewModel = hiltViewModel()
 ) {
 
     NavHost(
@@ -103,10 +110,22 @@ fun SetupNavGraph(
         composable(
             Screen.SearchUsersScreen.route,
         ) {
-            SearchUsersScreen(navController)
+            SearchUsersScreen(
+                navController,
+                searchUsersViewModel
+            )
+        }
+        composable(
+            route = Screen.DetailedUserScreen.route,
+        ) {
+            DetailedUserScreen(
+               navController = navController,
+                searchUsersViewModel = searchUsersViewModel
+            )
         }
     }
 }
+
 private val slideOutHorizontally = slideOutHorizontally(
     targetOffsetX = { 2000 },
     animationSpec = tween(

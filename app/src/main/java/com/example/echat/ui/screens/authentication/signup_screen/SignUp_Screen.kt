@@ -74,8 +74,8 @@ fun SignInScreen(
         )
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = Modifier.fillMaxSize().background(Color.White)
     ) {
 
         Box(modifier = Modifier.fillMaxSize().padding(10.dp), contentAlignment = Alignment.TopEnd) {
@@ -218,8 +218,9 @@ private fun ColumnItem(
                 .padding(bottom = 20.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .fillMaxWidth()
-                .background(Color(0xFFE7E7E7)),
-            placeholder = { Text(text = placeholder) },
+                .background(Color(0xFFF7F7FA)),
+            placeholder = { Text(text = placeholder, fontSize = 16.sp, color = Color.DarkGray) },
+            textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent
@@ -231,7 +232,8 @@ private fun ColumnItem(
                     IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                         Icon(
                             imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.DarkGray
                         )
                     }
                 }

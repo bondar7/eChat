@@ -1,5 +1,6 @@
 package com.example.echat.ui.screens.search_users_screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,12 +22,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import com.example.echat.data.model.Person
+import com.example.echat.navigation.Screen
 import com.example.echat.ui.CircularUserAvatar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun FoundUsersList(
-    foundUsers: List<Person>
+    foundUsers: List<Person>,
+    navController: NavHostController,
+    searchUsersViewModel: SearchUsersViewModel,
 ) {
 
     LazyColumn(
@@ -35,18 +47,29 @@ fun FoundUsersList(
             .background(Color(0xFFF7F7FA)),
     ) {
         items(items = foundUsers) {
-            Person(person = it)
+            Person(
+                person = it,
+                onClick = {
+                        searchUsersViewModel.updateSelectedUser(it)
+                        if (searchUsersViewModel.selectedUser.value != null) {
+                            navController.navigate(Screen.DetailedUserScreen.route)
+                        }
+                }
+            )
         }
     }
 }
 
 @Composable
 private fun Person(
-    person: Person
+    person: Person,
+    onClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
-            .clickable {  }
+            .clickable {
+                onClick()
+            }
     ) {
         Row(
             modifier = Modifier

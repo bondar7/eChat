@@ -10,15 +10,22 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchUsersViewModel @Inject constructor(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
 ): ViewModel() {
 
     private val _searchTextState = mutableStateOf("")
     val searchTextState = _searchTextState
+
+    private val _selectedUser: MutableState<Person?> = mutableStateOf(null)
+    val selectedUser = _selectedUser
+
 
     private val _foundUsers: MutableState<List<Person>> = mutableStateOf(emptyList())
     val foundUsers = _foundUsers
@@ -28,6 +35,10 @@ class SearchUsersViewModel @Inject constructor(
 
     fun updateUsersList(newUsers: List<Person>) {
         _foundUsers.value = newUsers
+    }
+
+    fun updateSelectedUser(newUser: Person) {
+        _selectedUser.value = newUser
     }
 
     fun setLoading(newValue: Boolean) {

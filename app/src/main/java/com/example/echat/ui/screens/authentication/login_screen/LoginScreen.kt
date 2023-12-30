@@ -77,8 +77,8 @@ fun LoginScreen(
         }
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize()
+    Box(
+        modifier = Modifier.fillMaxSize().background(Color.White)
     ) {
 
         Box(modifier = Modifier.fillMaxSize().padding(10.dp), contentAlignment = Alignment.TopEnd) {
@@ -121,7 +121,8 @@ fun LoginScreen(
                 text = "Login", style = TextStyle(
                     fontFamily = gliroy,
                     fontSize = 30.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
             )
             Spacer(modifier = Modifier.height(35.dp))
@@ -165,7 +166,7 @@ fun LoginScreen(
                     navController.popBackStack()
                     navController.navigate(Screen.SignIn.route)
                 }) {
-                    Text(text = "Sign in now", style = TextStyle(
+                    Text(text = "Sign up now", style = TextStyle(
                         color = ElementColor,
                         fontFamily = gliroy,
                         fontSize = 16.sp,
@@ -207,8 +208,9 @@ fun ColumnItem(
                 .padding(bottom = 20.dp)
                 .clip(RoundedCornerShape(12.dp))
                 .fillMaxWidth()
-                .background(Color(0xFFE7E7E7)),
-            placeholder = { Text(text = placeholder) },
+                .background(Color(0xFFF7F7FA)),
+            placeholder = { Text(text = placeholder, color = Color.DarkGray, fontSize = 16.sp) },
+            textStyle = TextStyle(color = Color.Black, fontSize = 16.sp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.Transparent,
                 unfocusedBorderColor = Color.Transparent
@@ -220,7 +222,8 @@ fun ColumnItem(
                     IconButton(onClick = { passwordVisibility = !passwordVisibility }) {
                         Icon(
                             imageVector = if (passwordVisibility) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = null
+                            contentDescription = null,
+                            tint = Color.DarkGray
                         )
                     }
                 }

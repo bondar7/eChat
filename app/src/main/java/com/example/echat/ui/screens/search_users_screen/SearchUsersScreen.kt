@@ -35,7 +35,7 @@ import com.example.echat.ui.theme.ElementColor
 @Composable
 fun SearchUsersScreen(
     navController: NavHostController,
-    searchUsersViewModel: SearchUsersViewModel = hiltViewModel()
+    searchUsersViewModel: SearchUsersViewModel,
 ) {
     val foundUsers = searchUsersViewModel.foundUsers
     val isLoading = searchUsersViewModel.isLoading
@@ -67,7 +67,9 @@ fun SearchUsersScreen(
             }
             if (!isLoading.value) {
                 FoundUsersList(
-                    foundUsers = foundUsers.value
+                    foundUsers = foundUsers.value,
+                    navController,
+                    searchUsersViewModel
                 )
             } else {
                 Box(

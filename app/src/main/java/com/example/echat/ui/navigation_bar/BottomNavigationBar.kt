@@ -94,11 +94,11 @@ fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navControlle
                         if (index == 2) {
                             Box(modifier = Modifier
                                 .clip(CircleShape)
-                                .background(ElementColor)) {
+                                .background(if (isSelected) Color(0xFFF7F7FA) else ElementColor)) {
                                 Icon(
                                     imageVector = if (isSelected) item.selectedIcon else item.unselectedIcon,
                                     contentDescription = null,
-                                    tint = Color.White,
+                                    tint = if (isSelected) ElementColor else Color.White,
                                     modifier = Modifier
                                         .padding(15.dp)
                                         .size(25.dp)
