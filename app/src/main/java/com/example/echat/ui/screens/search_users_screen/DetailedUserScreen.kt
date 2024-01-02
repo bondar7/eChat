@@ -1,6 +1,8 @@
 package com.example.echat.ui.screens.search_users_screen
 
 import android.annotation.SuppressLint
+import android.content.SharedPreferences
+import android.util.Log
 import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,7 +50,10 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberImagePainter
+import com.example.echat.MainViewModel
 import com.example.echat.data.model.Person
+import com.example.echat.navigation.Screen
+import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.CircularUserAvatar
 import com.example.echat.ui.theme.ElementColor
 
@@ -57,7 +62,9 @@ import com.example.echat.ui.theme.ElementColor
 @Composable
 fun DetailedUserScreen(
     searchUsersViewModel: SearchUsersViewModel,
-    navController: NavHostController
+    navController: NavHostController,
+    chatViewModel: ChatViewModel,
+    mainViewModel: MainViewModel = hiltViewModel()
 ) {
     val user = searchUsersViewModel.selectedUser.value
 
@@ -79,14 +86,26 @@ fun DetailedUserScreen(
                     }
                 },
                 actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(imageVector = Icons.Default.Videocam, contentDescription = null, tint = Color.Black)
-                        }
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(imageVector = Icons.Default.Phone, contentDescription = null, tint = Color.Black)
-                        }
                     IconButton(onClick = { /*TODO*/ }) {
-                        Icon(imageVector = Icons.AutoMirrored.Outlined.Message, contentDescription = null, tint = Color.Black)
+                        Icon(
+                            imageVector = Icons.Default.Videocam,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Default.Phone,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                    }
+                    IconButton(onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.Message,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -122,74 +141,90 @@ fun DetailedUserScreen(
             }
         }
 
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)
+                .padding(top = 64.dp)
+                .background(Color(0xFFF7F7FA))
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row(Modifier.padding(10.dp)) {
+                    Box(modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable { showFullPhoto = !showFullPhoto }) {
+                        CircularUserAvatar(avatar = user?.avatar, imageSize = 70.dp)
+                    }
+                    Spacer(modifier = Modifier.width(15.dp))
+                    Column {
+                        Text(
+                            text = user?.name ?: user?.username ?: "",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 18.sp
+                        )
+                        Text(
+                            text = "online or last seen at some time",
+                            color = Color.DarkGray,
+                            fontSize = 13.sp
+                        )
+                    }
+                }
+            }
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.White)
-                    .padding(top = 64.dp)
-                    .background(Color(0xFFF7F7FA))
+                    .fillMaxWidth()
             ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Row(Modifier.padding(10.dp)) {
-                        Box(modifier = Modifier
-                            .clip(CircleShape)
-                            .clickable { showFullPhoto = !showFullPhoto }) {
-                            CircularUserAvatar(avatar = user?.avatar, imageSize = 70.dp)
-                        }
-                        Spacer(modifier = Modifier.width(15.dp))
-                        Column {
-                            Text(
-                                text = user?.name ?: user?.username ?: "",
-                                color = Color.Black,
-                                fontWeight = FontWeight.Medium,
-                                fontSize = 18.sp
-                            )
-                            Text(
-                                text = "online or last seen at some time",
-                                color = Color.DarkGray,
-                                fontSize = 13.sp
-                            )
-                        }
-                    }
-                }
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Information",
-                        color = ElementColor,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(start = 10.dp, top = 10.dp)
-                    )
+                Text(
+                    text = "Information",
+                    color = ElementColor,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(start = 10.dp, top = 10.dp)
+                )
 
-                    if (user?.bio?.isNotBlank() != null && user.bio != "Bio") {
-                        InfoColumn(text = user.bio, subText = "Bio")
-                        Box(modifier = Modifier
+                if (user?.bio?.isNotBlank() != null && user.bio != "Bio") {
+                    InfoColumn(text = user.bio, subText = "Bio")
+                    Box(
+                        modifier = Modifier
                             .fillMaxWidth()
                             .background(Color.Gray)
-                            .height(0.8.dp))
-                    }
-                    InfoColumn(
-                        user?.username ?: "",
-                        "Username"
-                    )
-                    Box(modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Gray)
-                        .height(0.8.dp))
-                    InfoColumn(
-                        "Email is hidden",
-                        "Email"
+                            .height(0.8.dp)
                     )
                 }
-                StartChatIcon(
-                    onClick = {}
+                InfoColumn(
+                    user?.username ?: "",
+                    "Username"
                 )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Gray)
+                        .height(0.8.dp)
+                )
+                InfoColumn(
+                    "Email is hidden",
+                    "Email"
+                )
+            }
+            StartChatIcon(
+                onClick = {
+                    val user1Id = searchUsersViewModel.selectedUser.value?.id
+                    val user2id = mainViewModel.user.value?.id
+                    val currentUserId = mainViewModel.user.value?.id
+                    val currentSessionId = chatViewModel.selectedSessionId.value
+                    if (user1Id != null && user2id != null && user2id != user1Id) {
+                        chatViewModel.createSession(user1Id, user2id)
+                    }
+                    if (currentSessionId.isNotBlank() && currentUserId != null) {
+                        chatViewModel.connectToWebSocket(currentUserId, currentSessionId)
+                        navController.navigate(Screen.ChatScreen.route)
+                    }
+                }
+            )
         }
     }
 }

@@ -52,6 +52,7 @@ class AuthRepositoryImpl(
             val logInRequest = LogInRequest(username, password)
             val response = authApi.logIn(logInRequest)
             val receivedUser = User(
+                id = response.id,
                 username = response.username,
                 name = response.name,
                 email = response.email,

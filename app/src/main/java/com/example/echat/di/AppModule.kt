@@ -8,6 +8,10 @@ import com.example.echat.server.auth.api.AuthApi
 import com.example.echat.server.auth.repository.AuthRepository
 import com.example.echat.server.auth.repository.AuthRepositoryImpl
 import com.example.echat.server.auth.AuthViewModel
+import com.example.echat.server.chat.ChatViewModel
+import com.example.echat.server.chat.chatApi.ChatApi
+import com.example.echat.server.chat.repository.ChatRepository
+import com.example.echat.server.chat.repository.ChatRepositoryImpl
 import com.example.echat.server.main.api.MainApi
 import com.example.echat.server.main.repository.MainRepository
 import com.example.echat.server.main.repository.MainRepositoryImpl
@@ -41,6 +45,15 @@ object AppModule {
             .build()
             .create(MainApi::class.java)
     }
+    @Provides
+    @Singleton
+    fun provideChatApi(): ChatApi {
+        return Retrofit.Builder()
+            .baseUrl("http://192.168.1.2:8080/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(ChatApi::class.java)
+    }
 
     @Provides
     @Singleton
@@ -70,6 +83,14 @@ object AppModule {
         api: MainApi,
     ): MainRepository {
         return MainRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChatRepository(
+        api: ChatApi,
+    ): ChatRepository {
+        return ChatRepositoryImpl(api)
     }
 
     @Provides

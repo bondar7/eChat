@@ -13,5 +13,7 @@ sealed class Screen(val route: String) {
 
     object SearchUsersScreen: Screen("search_users_screen")
     object DetailedUserScreen: Screen("detailed_user_screen")
+    object ChatScreen: Screen("chat_screen")
+
 }
 

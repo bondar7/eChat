@@ -110,4 +110,7 @@ dependencies {
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
     implementation("io.coil-kt:coil-compose:2.1.0")
+
+    // okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 }
