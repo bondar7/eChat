@@ -27,11 +27,7 @@ class ChatsViewModel @Inject constructor(
     private val _chatSessions = mutableStateOf(emptyList<ChatSession>())
     val chatSessions = _chatSessions
 
-    init {
-        getSessionsByUserId()
-    }
-
-   private fun getSessionsByUserId() {
+    fun getSessionsByUserId() {
         val currentUserId = mainViewModel.user.value?.id
         if (currentUserId != null) {
             CoroutineScope(Dispatchers.IO).launch {

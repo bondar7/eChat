@@ -32,8 +32,8 @@ import kotlinx.coroutines.withContext
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditEmailScreen(
-    mainViewModel: MainViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel,
+    authViewModel: AuthViewModel,
     navController: NavHostController
 ) {
     var checkingForPassword by remember {

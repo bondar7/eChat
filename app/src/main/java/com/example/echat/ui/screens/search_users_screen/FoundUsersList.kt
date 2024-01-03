@@ -27,6 +27,7 @@ import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
 import com.example.echat.server.data.model.Person
 import com.example.echat.navigation.Screen
+import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.CircularUserAvatar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -38,7 +39,7 @@ import kotlinx.coroutines.withContext
 fun FoundUsersList(
     foundUsers: List<Person>,
     navController: NavHostController,
-    searchUsersViewModel: SearchUsersViewModel,
+    chatViewModel: ChatViewModel
 ) {
 
     LazyColumn(
@@ -50,8 +51,8 @@ fun FoundUsersList(
             Person(
                 person = it,
                 onClick = {
-                        searchUsersViewModel.updateSelectedUser(it)
-                        if (searchUsersViewModel.selectedUser.value != null) {
+                    chatViewModel.updateSelectedUser(it)
+                        if (chatViewModel.selectedUser.value != null) {
                             navController.navigate(Screen.DetailedUserScreen.route)
                         }
                 }

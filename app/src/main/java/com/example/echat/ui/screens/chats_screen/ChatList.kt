@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Text
@@ -32,14 +33,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.echat.R
 import com.example.echat.server.data.model.ChatSession
+import com.example.echat.server.data.model.Person
 import com.example.echat.ui.CircularUserAvatar
+import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
-fun ChatList(chats: List<ChatSession>, onChatClick: (userId: String) -> Unit) {
+fun ChatList(chats: List<ChatSession>, onChatClick: (selectedPerson: Person) -> Unit) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(25.dp)) {
         items(items = chats) {
             ListItem(chat = it, onChatClick = { onChatClick(it) })
@@ -48,19 +55,24 @@ fun ChatList(chats: List<ChatSession>, onChatClick: (userId: String) -> Unit) {
 }
 
 @Composable
-fun ListItem(chat: ChatSession, onChatClick: (userId: String) -> Unit) {
+fun ListItem(
+    chat: ChatSession,
+    onChatClick: (selectedPerson: Person) -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onChatClick(chat.user.id) }
-        ,
+            .clip(RoundedCornerShape(20.dp))
+            .clickable {
+                onChatClick(chat.user)
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
                 .padding(end = 10.dp, top = 5.dp, bottom = 5.dp)
                 .clip(CircleShape)
-                .size(65.dp)
+                .size(60.dp)
         ) {
             CircularUserAvatar(avatar = chat.user.avatar, imageSize = 65.dp)
         }
@@ -71,7 +83,11 @@ fun ListItem(chat: ChatSession, onChatClick: (userId: String) -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column() {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
                         text = chat.user.name, style = TextStyle(
                             fontFamily = gliroy,
@@ -80,51 +96,32 @@ fun ListItem(chat: ChatSession, onChatClick: (userId: String) -> Unit) {
                         ),
                         maxLines = 1
                     )
-//                    Spacer(modifier = Modifier.width(5.dp))
-////                    Box(modifier = Modifier
-////                        .clip(CircleShape)
-////                        .size(10.dp)
-////                        .background(if (chat.isUserOnline) Color.Green else Color.Gray))
-//                }
-//                Spacer(modifier = Modifier.height(5.dp))
-////                if (chat.isUserTyping) {
-////                    Text(
-////                        text = "${chat.username} is typing...", style = TextStyle(
-////                            color = ElementColor,
-////                            fontSize = 15.sp,
-////                            fontWeight = FontWeight.Medium
-////                        )
-////                    )
-////                } else {
-////                }
+                    Text(
+                        text = formatTimestamp(chat.lastMessageSentTime),
+                        color = Color.Black,
+                        fontFamily = gliroy,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 13.sp
+                    )
                 }
                 Spacer(modifier = Modifier.height(5.dp))
                 Text(
-                    text = chat.lastMessage, style = TextStyle(
+                    text = chat.lastMessage,
+                    style = TextStyle(
                         color = Color.Gray,
                         fontFamily = gliroy,
                         fontSize = 15.sp
                     ),
                     maxLines = 1
                 )
-
-//            if (chat.unreadMessages == 0) {
-//                Text(text = chat.lastMessageTime, color = Color.Gray, fontSize = 13.sp)
-//            } else {
-//                Box(
-//                    modifier = Modifier
-//                        .background(ElementColor)
-//                        .clip(CircleShape)
-//                ) {
-//                    Text(
-//                        text = chat.unreadMessages.toString(),
-//                        color = Color.White,
-//                        modifier = Modifier.padding(10.dp)
-//                    )
-//                }
-//            }
             }
 
         }
     }
+}
+
+private fun formatTimestamp(timestamp: Long): String {
+    val date = Date(timestamp)
+    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return format.format(date)
 }

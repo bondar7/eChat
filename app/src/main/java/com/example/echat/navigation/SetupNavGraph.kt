@@ -6,16 +6,13 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.slideOutVertically
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
-import com.example.echat.server.data.model.Person
+import com.example.echat.MainViewModel
+import com.example.echat.server.auth.AuthViewModel
 import com.example.echat.server.data.model.User
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
@@ -27,7 +24,8 @@ import com.example.echat.ui.screens.authentication.auth_edit_screens.EditNameScr
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditPasswordScreen
 import com.example.echat.ui.screens.authentication.auth_edit_screens.EditUsernameScreen
 import com.example.echat.ui.screens.chat_screen.ChatScreen
-import com.example.echat.ui.screens.search_users_screen.DetailedUserScreen
+import com.example.echat.ui.screens.chats_screen.ChatsViewModel
+import com.example.echat.ui.screens.detailed_user_screen.DetailedUserScreen
 import com.example.echat.ui.screens.search_users_screen.SearchUsersScreen
 import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
 import com.example.echat.ui.screens.settings_screen.SettingsScreen
@@ -37,10 +35,12 @@ import com.google.gson.Gson
 fun SetupNavGraph(
     navController: NavHostController,
     prefs: SharedPreferences,
+    mainViewModel: MainViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel(),
     searchUsersViewModel: SearchUsersViewModel = hiltViewModel(),
-    chatViewModel: ChatViewModel = hiltViewModel()
+    chatViewModel: ChatViewModel = hiltViewModel(),
+    chatsViewModel: ChatsViewModel = hiltViewModel()
 ) {
-
     NavHost(
         navController = navController,
         startDestination = if (getUser(prefs) == null) Screen.SignIn.route else Screen.ChatsScreen.route
@@ -66,20 +66,29 @@ fun SetupNavGraph(
         composable(
             Screen.ChatsScreen.route,
         ) {
-            ChatsScreen(navHostController = navController)
+            ChatsScreen(
+                mainViewModel,
+                authViewModel,
+                chatsViewModel,
+                chatViewModel,
+                navController
+            )
         }
         composable(
             Screen.SettingsScreen.route,
         ) {
             SettingsScreen(
-                navHostController = navController,
+                navController,
+                mainViewModel
             )
         }
         composable(
             Screen.EditUserBioScreen.route,
         ) {
             EditBioScreen(
-                navController = navController
+               navController,
+                authViewModel,
+                mainViewModel
             )
         }
         composable(
@@ -88,7 +97,9 @@ fun SetupNavGraph(
             EditUsernameScreen(
                 "Username",
                 "Set username",
-                navController
+                navController,
+                mainViewModel,
+                authViewModel
             )
         }
         composable(
@@ -97,25 +108,36 @@ fun SetupNavGraph(
             EditNameScreen(
                 "Name",
                 "Set name",
-                navController
+                navController,
+                mainViewModel,
+                authViewModel
             )
         }
         composable(
             Screen.EditPasswordScreen.route,
         ) {
-            EditPasswordScreen(navController = navController)
+            EditPasswordScreen(
+                mainViewModel,
+                authViewModel,
+                navController,
+            )
         }
         composable(
             Screen.EditEmailScreen.route,
         ) {
-            EditEmailScreen(navController = navController)
+            EditEmailScreen(
+                mainViewModel,
+                authViewModel,
+                navController,
+            )
         }
         composable(
             Screen.SearchUsersScreen.route,
         ) {
             SearchUsersScreen(
                 navController,
-                searchUsersViewModel
+                searchUsersViewModel,
+                chatViewModel
             )
         }
         composable(
@@ -124,7 +146,8 @@ fun SetupNavGraph(
             DetailedUserScreen(
                 navController = navController,
                 searchUsersViewModel = searchUsersViewModel,
-                chatViewModel = chatViewModel
+                chatViewModel = chatViewModel,
+                mainViewModel = mainViewModel
             )
         }
         composable(
@@ -132,7 +155,6 @@ fun SetupNavGraph(
         ) {
             ChatScreen(
                 navController = navController,
-                searchUsersViewModel = searchUsersViewModel,
                 chatViewModel = chatViewModel
             )
         }

@@ -67,7 +67,7 @@ import com.example.echat.ui.theme.gliroy
 @Composable
 fun SettingsScreen(
     navHostController: NavHostController,
-    viewModel: MainViewModel = hiltViewModel(),
+    viewModel: MainViewModel
 ) {
     val user = viewModel.user.value
     val prefs = LocalContext.current.getSharedPreferences("prefs", MODE_PRIVATE)

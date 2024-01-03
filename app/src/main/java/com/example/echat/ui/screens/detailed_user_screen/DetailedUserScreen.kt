@@ -1,9 +1,6 @@
-package com.example.echat.ui.screens.search_users_screen
+package com.example.echat.ui.screens.detailed_user_screen
 
 import android.annotation.SuppressLint
-import android.content.SharedPreferences
-import android.util.Log
-import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,10 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.automirrored.outlined.Message
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Message
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Videocam
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -47,20 +42,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.echat.MainViewModel
-import com.example.echat.server.data.model.Person
-import com.example.echat.navigation.Screen
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.CircularUserAvatar
+import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
 import com.example.echat.ui.theme.ElementColor
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,9 +57,9 @@ fun DetailedUserScreen(
     searchUsersViewModel: SearchUsersViewModel,
     navController: NavHostController,
     chatViewModel: ChatViewModel,
-    mainViewModel: MainViewModel = hiltViewModel()
+    mainViewModel: MainViewModel
 ) {
-    val user = searchUsersViewModel.selectedUser.value
+    val user = chatViewModel.selectedUser.value
 
     var showFullPhoto by remember {
         mutableStateOf(false)
@@ -243,14 +231,14 @@ private fun startChat(
     chatViewModel: ChatViewModel,
     navController: NavHostController
 ) {
-    val user1Id = searchUsersViewModel.selectedUser.value?.id
+    val user1Id = chatViewModel.selectedUser.value?.id
     val currentUserId = mainViewModel.user.value?.id
     if (user1Id != null && currentUserId != null) {
         chatViewModel.startChat(
             user1Id = user1Id,
-            currentUserId = currentUserId
+            currentUserId = currentUserId,
+            navController = navController
         )
-        navController.navigate(Screen.ChatScreen.route)
     }
 }
 

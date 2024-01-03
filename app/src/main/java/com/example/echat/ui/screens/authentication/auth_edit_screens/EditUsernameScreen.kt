@@ -49,8 +49,8 @@ fun EditUsernameScreen(
     topBarTitle: String,
     blueTitle: String,
     navController: NavHostController,
-    mainViewModel: MainViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    mainViewModel: MainViewModel,
+    authViewModel: AuthViewModel
 ) {
 
     var textState by remember {

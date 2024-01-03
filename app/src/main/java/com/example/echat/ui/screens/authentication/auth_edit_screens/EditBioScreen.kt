@@ -44,8 +44,8 @@ import com.example.echat.ui.theme.ElementColor
 @Composable
 fun EditBioScreen(
     navController: NavHostController,
-    authViewModel: AuthViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel()
+    authViewModel: AuthViewModel,
+    mainViewModel: MainViewModel
 ) {
 
     val topBarTitle = "Bio"

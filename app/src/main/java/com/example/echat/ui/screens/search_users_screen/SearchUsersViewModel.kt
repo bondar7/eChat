@@ -23,10 +23,6 @@ class SearchUsersViewModel @Inject constructor(
     private val _searchTextState = mutableStateOf("")
     val searchTextState = _searchTextState
 
-    private val _selectedUser: MutableState<Person?> = mutableStateOf(null)
-    val selectedUser = _selectedUser
-
-
     private val _foundUsers: MutableState<List<Person>> = mutableStateOf(emptyList())
     val foundUsers = _foundUsers
 
@@ -35,10 +31,6 @@ class SearchUsersViewModel @Inject constructor(
 
     fun updateUsersList(newUsers: List<Person>) {
         _foundUsers.value = newUsers
-    }
-
-    fun updateSelectedUser(newUser: Person) {
-        _selectedUser.value = newUser
     }
 
     fun setLoading(newValue: Boolean) {

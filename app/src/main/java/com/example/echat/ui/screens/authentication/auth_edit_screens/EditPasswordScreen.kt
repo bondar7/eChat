@@ -59,8 +59,8 @@ import kotlinx.coroutines.withContext
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun EditPasswordScreen(
-    mainViewModel: MainViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel(),
+    mainViewModel: MainViewModel,
+    authViewModel: AuthViewModel,
     navController: NavHostController
 ) {
 

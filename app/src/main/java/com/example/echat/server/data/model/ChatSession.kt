@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class ChatSession(
     val sessionId: String,
     val user: Person,
-    val lastMessage: String
+    val lastMessage: String,
+    val lastMessageSentTime: Long
 )

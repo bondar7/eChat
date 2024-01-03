@@ -8,15 +8,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
+import com.example.echat.navigation.Screen
 import com.example.echat.server.data.model.Message
 import com.example.echat.server.auth.repository.AuthRepository
 import com.example.echat.server.chat.repository.ChatRepository
+import com.example.echat.server.data.model.Person
 import com.example.echat.server.session.repository.SessionRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -37,8 +41,12 @@ class ChatViewModel @Inject constructor(
 
     private val _selectedSessionId = mutableStateOf("")
 
-
-    fun startChat(user1Id: String, currentUserId: String) {
+    private val _selectedUser: MutableState<Person?> = mutableStateOf(null)
+    val selectedUser = _selectedUser
+    fun updateSelectedUser(newUser: Person) {
+        _selectedUser.value = newUser
+    }
+    fun startChat(user1Id: String, currentUserId: String, navController: NavHostController) {
         CoroutineScope(Dispatchers.IO).launch {
             // create or get existing session
             sessionRepository.getSession(
@@ -57,6 +65,10 @@ class ChatViewModel @Inject constructor(
                     _selectedSessionId.value,
                     this@ChatViewModel
                 )
+            }
+            withContext(Dispatchers.Main) {
+                    Log.d("SELECTED USER:", _selectedUser.value?.username.toString())
+                    navController.navigate(Screen.ChatScreen.route)
             }
         }
     }

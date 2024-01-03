@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.R
+import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.navigation_bar.BottomNavigationBar
 import com.example.echat.ui.search_bar.SearchBar
 import com.example.echat.ui.theme.ElementColor
@@ -36,6 +37,7 @@ import com.example.echat.ui.theme.ElementColor
 fun SearchUsersScreen(
     navController: NavHostController,
     searchUsersViewModel: SearchUsersViewModel,
+    chatViewModel: ChatViewModel
 ) {
     val foundUsers = searchUsersViewModel.foundUsers
     val isLoading = searchUsersViewModel.isLoading
@@ -69,7 +71,7 @@ fun SearchUsersScreen(
                 FoundUsersList(
                     foundUsers = foundUsers.value,
                     navController,
-                    searchUsersViewModel
+                    chatViewModel
                 )
             } else {
                 Box(

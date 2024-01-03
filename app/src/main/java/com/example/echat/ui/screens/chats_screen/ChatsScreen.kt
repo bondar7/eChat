@@ -1,6 +1,7 @@
 package com.example.echat.ui.screens.chats_screen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,12 +44,14 @@ import com.example.echat.utils.observeAuthResultsAndNavigate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatsScreen(
-    viewModel: MainViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel(),
-    chatsViewModel: ChatsViewModel = hiltViewModel(),
-    chatViewModel: ChatViewModel = hiltViewModel(),
+    viewModel: MainViewModel,
+    authViewModel: AuthViewModel,
+    chatsViewModel: ChatsViewModel,
+    chatViewModel: ChatViewModel,
     navHostController: NavHostController
 ) {
+    chatsViewModel.getSessionsByUserId()
+
     val chatSessions = chatsViewModel.chatSessions.value
     val context = LocalContext.current
 
@@ -79,7 +82,7 @@ fun ChatsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Hello ${viewModel.user.value?.username} 👋", style = TextStyle(
+                    text = "Hello ${viewModel.user.value?.name} 👋", style = TextStyle(
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,
@@ -106,14 +109,16 @@ fun ChatsScreen(
             // Chat List
             ChatList(
                 chats = chatSessions,
-                onChatClick = { userId ->
+                onChatClick = { selectedPerson ->
+                    chatViewModel.updateSelectedUser(selectedPerson)
                     val currentUserId = viewModel.user.value?.id
-                    if (userId != null && currentUserId != null) {
+                    val userId = selectedPerson.id
+                    if (currentUserId != null) {
                         chatViewModel.startChat(
                             user1Id = userId,
-                            currentUserId = currentUserId
+                            currentUserId = currentUserId,
+                            navController = navHostController
                         )
-//                        navHostController.navigate(Screen.ChatScreen.route)
                     }
                 }
             )
