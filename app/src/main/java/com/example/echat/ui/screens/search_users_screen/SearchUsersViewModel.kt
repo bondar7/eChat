@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.echat.data.model.Person
+import com.example.echat.server.data.model.Person
 import com.example.echat.server.main.repository.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope

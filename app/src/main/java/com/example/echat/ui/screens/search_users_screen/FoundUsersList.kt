@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
-import com.example.echat.data.model.Person
+import com.example.echat.server.data.model.Person
 import com.example.echat.navigation.Screen
 import com.example.echat.ui.CircularUserAvatar
 import kotlinx.coroutines.CoroutineScope

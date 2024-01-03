@@ -15,8 +15,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.echat.data.model.Person
-import com.example.echat.data.model.User
+import com.example.echat.server.data.model.Person
+import com.example.echat.server.data.model.User
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.screens.authentication.login_screen.LoginScreen
 import com.example.echat.ui.screens.authentication.signup_screen.SignInScreen

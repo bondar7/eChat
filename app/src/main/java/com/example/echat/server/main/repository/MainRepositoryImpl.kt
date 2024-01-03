@@ -1,7 +1,7 @@
 package com.example.echat.server.main.repository
 
 import android.util.Log
-import com.example.echat.data.model.Person
+import com.example.echat.server.data.model.Person
 import com.example.echat.server.main.api.MainApi
 import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
 import retrofit2.HttpException

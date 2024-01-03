@@ -30,7 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
+import com.example.echat.navigation.Screen
 import com.example.echat.server.auth.AuthViewModel
+import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.navigation_bar.BottomNavigationBar
 import com.example.echat.ui.search_bar.SearchBar
 import com.example.echat.ui.theme.MainBackgroundColor
@@ -44,9 +46,10 @@ fun ChatsScreen(
     viewModel: MainViewModel = hiltViewModel(),
     authViewModel: AuthViewModel = hiltViewModel(),
     chatsViewModel: ChatsViewModel = hiltViewModel(),
+    chatViewModel: ChatViewModel = hiltViewModel(),
     navHostController: NavHostController
 ) {
-
+    val chatSessions = chatsViewModel.chatSessions.value
     val context = LocalContext.current
 
     LaunchedEffect(key1 = viewModel, key2 = context) {
@@ -100,19 +103,20 @@ fun ChatsScreen(
             )
 
             Spacer(modifier = Modifier.height(25.dp))
-            // Chats List
-            val chats = List(20) {
-                ChatModel(
-                    image = Icons.Default.Person,
-                    username = "Maksim Bondar",
-                    lastMessage = "I love them! Lets go.",
-                    isUserOnline = true,
-                    isUserTyping = false,
-                    lastMessageTime = "08:34",
-                    unreadMessages = 0
-                )
-            }
-            ChatList(chats)
+            // Chat List
+            ChatList(
+                chats = chatSessions,
+                onChatClick = { userId ->
+                    val currentUserId = viewModel.user.value?.id
+                    if (userId != null && currentUserId != null) {
+                        chatViewModel.startChat(
+                            user1Id = userId,
+                            currentUserId = currentUserId
+                        )
+//                        navHostController.navigate(Screen.ChatScreen.route)
+                    }
+                }
+            )
         }
     }
 }

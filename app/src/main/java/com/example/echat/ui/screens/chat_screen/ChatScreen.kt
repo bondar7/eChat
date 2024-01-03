@@ -3,6 +3,7 @@ package com.example.echat.ui.screens.chat_screen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -51,7 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.echat.MainViewModel
-import com.example.echat.data.model.Message
+import com.example.echat.server.data.model.Message
+import com.example.echat.navigation.Screen
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.CircularUserAvatar
 import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
@@ -65,8 +68,6 @@ fun ChatScreen(
     searchUsersViewModel: SearchUsersViewModel,
     chatViewModel: ChatViewModel
 ) {
-    chatViewModel.getMessagesBySessionId()
-
     val selectedUser = searchUsersViewModel.selectedUser.value
     val state = chatViewModel.state.value
 
@@ -79,10 +80,14 @@ fun ChatScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Row {
-                            CircularUserAvatar(
-                                avatar = selectedUser?.avatar,
-                                imageSize = 40.dp
-                            )
+                            Box(modifier = Modifier.clip(CircleShape).clickable {
+                                popBackStack(navController, chatViewModel)
+                            }) {
+                                CircularUserAvatar(
+                                    avatar = selectedUser?.avatar,
+                                    imageSize = 40.dp
+                                )
+                            }
                             Spacer(modifier = Modifier.width(5.dp))
                             Column {
                                 Text(
@@ -102,10 +107,7 @@ fun ChatScreen(
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                        chatViewModel.updateSelectedSessionId("")
-                    }) {
+                    IconButton(onClick = { popBackStack(navController, chatViewModel) }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null,
@@ -148,21 +150,26 @@ fun ChatScreen(
             )
         }
     ) {
-//        if (state.isLoading) {
-//            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//                CircularProgressIndicator(
-//                    modifier = Modifier.size(45.dp),
-//                    color = ElementColor,
-//                    strokeWidth = 4.5.dp
-//                )
-//            }
-//        } else {
-        MessagesList(
-            state.messages,
-            selectedUser?.id!!
-        )
-
+        if (state.isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(45.dp),
+                    color = ElementColor,
+                    strokeWidth = 4.5.dp
+                )
+            }
+        } else {
+            MessagesList(
+                state.messages,
+                selectedUser?.id!!
+            )
+        }
     }
+}
+
+private fun popBackStack(navController: NavHostController, chatViewModel: ChatViewModel) {
+    navController.popBackStack()
+    chatViewModel.updateSelectedSessionId("")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -206,13 +213,13 @@ private fun SendMessage(
                     .clip(RoundedCornerShape(30.dp))
                     .weight(1f)
                     .height(50.dp),
-                singleLine = true
+                singleLine = true,
             )
             IconButton(
                 onClick = {
                     onSendMessage(textState)
                     textState = ""
-                          },
+                },
                 modifier = Modifier.weight(0.2f)
             ) {
                 Icon(
@@ -233,7 +240,7 @@ private fun MessagesList(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp, top = 65.dp, bottom = 75.dp),
+            .padding(start = 10.dp, end = 10.dp, top = 70.dp, bottom = 75.dp),
         verticalArrangement = Arrangement.spacedBy(3.dp),
         reverseLayout = true
     ) {
@@ -261,7 +268,7 @@ private fun MessageListItem(
         Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))) {
             Column(
                 modifier = Modifier
-                    .width(200.dp)
+                    .width(250.dp)
                     .background(
                         color = if (isOwnMessage) ElementColor else Color.DarkGray,
                     )

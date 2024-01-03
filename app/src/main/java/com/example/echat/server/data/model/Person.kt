@@ -1,4 +1,4 @@
-package com.example.echat.data.model
+package com.example.echat.server.data.model
 
 
 import android.os.Parcelable

@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Logout
@@ -51,6 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.echat.MainViewModel
 import com.example.echat.navigation.Screen
@@ -114,7 +116,10 @@ fun SettingsScreen(
                             )
                         }
                     }
-                    Image(painter = rememberImagePainter(user.avatar), contentDescription = null)
+                    Image(
+                        painter = rememberAsyncImagePainter(user.avatar),
+                        contentDescription = null
+                    )
                 }
             }
         }
@@ -202,7 +207,7 @@ fun SettingsScreen(
                             }
                         }
                     }) {
-                        Icon(imageVector = Icons.Default.Logout, contentDescription = null)
+                        Icon(imageVector = Icons.AutoMirrored.Default.Logout, contentDescription = null)
                     }
                 }
             }

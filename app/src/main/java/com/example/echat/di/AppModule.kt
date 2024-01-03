@@ -15,6 +15,9 @@ import com.example.echat.server.chat.repository.ChatRepositoryImpl
 import com.example.echat.server.main.api.MainApi
 import com.example.echat.server.main.repository.MainRepository
 import com.example.echat.server.main.repository.MainRepositoryImpl
+import com.example.echat.server.session.repository.SessionRepository
+import com.example.echat.server.session.repository.SessionRepositoryImpl
+import com.example.echat.server.session.sessionApi.SessionApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,12 +29,12 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-
+    private const val BASE_URL = "http://192.168.1.2:8080/"
     @Provides
     @Singleton
     fun provideAuthApi(): AuthApi {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.2:8080/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(AuthApi::class.java)
@@ -40,7 +43,7 @@ object AppModule {
     @Singleton
     fun provideMainApi(): MainApi {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.2:8080/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(MainApi::class.java)
@@ -49,10 +52,20 @@ object AppModule {
     @Singleton
     fun provideChatApi(): ChatApi {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.2:8080/")
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ChatApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSessionApi(): SessionApi {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(SessionApi::class.java)
     }
 
     @Provides
@@ -91,6 +104,14 @@ object AppModule {
         api: ChatApi,
     ): ChatRepository {
         return ChatRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSessionRepository(
+        api: SessionApi,
+    ): SessionRepository {
+        return SessionRepositoryImpl(api)
     }
 
     @Provides

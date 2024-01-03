@@ -17,7 +17,7 @@ import com.example.echat.server.auth.api.AuthApi
 import com.example.echat.server.auth.requests.ChangeUserBioRequest
 import com.example.echat.server.auth.requests.LogInRequest
 import com.example.echat.server.auth.requests.SignUpRequest
-import com.example.echat.data.model.User
+import com.example.echat.server.data.model.User
 import com.google.gson.Gson
 
 class AuthRepositoryImpl(

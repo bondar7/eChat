@@ -3,7 +3,7 @@ package com.example.echat
 import android.content.SharedPreferences
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.echat.data.model.User
+import com.example.echat.server.data.model.User
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

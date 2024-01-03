@@ -49,13 +49,18 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.echat.MainViewModel
-import com.example.echat.data.model.Person
+import com.example.echat.server.data.model.Person
 import com.example.echat.navigation.Screen
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.CircularUserAvatar
 import com.example.echat.ui.theme.ElementColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -100,7 +105,15 @@ fun DetailedUserScreen(
                             tint = Color.Black
                         )
                     }
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        startChat(
+                            searchUsersViewModel,
+                            mainViewModel,
+                            chatViewModel,
+                            navController
+                        )
+                    }
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.Message,
                             contentDescription = null,
@@ -136,7 +149,7 @@ fun DetailedUserScreen(
                             )
                         }
                     }
-                    Image(painter = rememberImagePainter(user.avatar), contentDescription = null)
+                    Image(painter = rememberAsyncImagePainter(user.avatar), contentDescription = null)
                 }
             }
         }
@@ -212,20 +225,32 @@ fun DetailedUserScreen(
             }
             StartChatIcon(
                 onClick = {
-                    val user1Id = searchUsersViewModel.selectedUser.value?.id
-                    val user2id = mainViewModel.user.value?.id
-                    val currentUserId = mainViewModel.user.value?.id
-                    val currentSessionId = chatViewModel.selectedSessionId.value
-                    if (user1Id != null && user2id != null && user2id != user1Id) {
-                        chatViewModel.createSession(user1Id, user2id)
-                    }
-                    if (currentSessionId.isNotBlank() && currentUserId != null) {
-                        chatViewModel.connectToWebSocket(currentUserId, currentSessionId)
-                        navController.navigate(Screen.ChatScreen.route)
-                    }
+                    startChat(
+                        searchUsersViewModel,
+                        mainViewModel,
+                        chatViewModel,
+                        navController
+                    )
                 }
             )
         }
+    }
+}
+
+private fun startChat(
+    searchUsersViewModel: SearchUsersViewModel,
+    mainViewModel: MainViewModel,
+    chatViewModel: ChatViewModel,
+    navController: NavHostController
+) {
+    val user1Id = searchUsersViewModel.selectedUser.value?.id
+    val currentUserId = mainViewModel.user.value?.id
+    if (user1Id != null && currentUserId != null) {
+        chatViewModel.startChat(
+            user1Id = user1Id,
+            currentUserId = currentUserId
+        )
+        navController.navigate(Screen.ChatScreen.route)
     }
 }
 

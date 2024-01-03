@@ -3,7 +3,7 @@ package com.example.echat.server.chat.repository
 import android.content.SharedPreferences
 import android.util.Log
 import com.echat_backend.data.requests.CreateSessionRequest
-import com.example.echat.data.model.Message
+import com.example.echat.server.data.model.Message
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.server.chat.MyWebSocketListener
 import com.example.echat.server.chat.chatApi.ChatApi
@@ -15,26 +15,6 @@ import retrofit2.HttpException
 class ChatRepositoryImpl(
     private val api: ChatApi,
 ) : ChatRepository {
-    override suspend fun getSession(
-        user1Id: String,
-        user2Id: String,
-        chatViewModel: ChatViewModel
-    ) {
-        try {
-            val request = CreateSessionRequest(user1Id, user2Id)
-            val response = api.createSession(request)
-
-            Log.d("RECEIVED SESSION ID", response.sessionId)
-            chatViewModel.updateSelectedSessionId(response.sessionId)
-        } catch (e: HttpException) {
-            e.printStackTrace()
-            Log.d("(HTTP EXCEPTION)", e.toString())
-        } catch (e: Exception) {
-            e.printStackTrace()
-            Log.d("(EXCEPTION)", e.toString())
-        }
-    }
-
     override suspend fun connectToWebSocket(
         currentUserId: String,
         currentSessionId: String,

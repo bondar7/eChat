@@ -1,6 +1,6 @@
 package com.example.echat.server.main.api
 
-import com.example.echat.data.model.Person
+import com.example.echat.server.data.model.Person
 import com.example.echat.server.auth.requests.ChangePasswordRequest
 import retrofit2.http.Body
 import retrofit2.http.GET

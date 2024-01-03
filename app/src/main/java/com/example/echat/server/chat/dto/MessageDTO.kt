@@ -1,9 +1,11 @@
 package com.example.echat.server.chat.dto
 
-import com.example.echat.data.model.Message
+import com.example.echat.server.data.model.Message
 import kotlinx.serialization.Serializable
 import java.text.DateFormat
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 @Serializable
 data class MessageDTO(
@@ -16,12 +18,16 @@ data class MessageDTO(
 ) {
     fun toMessage(): Message {
         val date = Date(timestamp)
-        val formattedDate = DateFormat
-            .getDateInstance(DateFormat.DEFAULT)
-            .format(date)
+
+        // Визначаємо шаблон для отримання часу (HH:mm)
+        val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+        // Конвертуємо об'єкт Date до рядка за допомогою визначеного шаблону
+        val formattedTime = timeFormat.format(date)
+
         return Message(
             content = content,
-            formattedTime = formattedDate,
+            formattedTime = formattedTime,
             username = senderUsername,
             senderId = senderId
         )

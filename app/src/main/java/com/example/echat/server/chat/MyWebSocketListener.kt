@@ -1,7 +1,7 @@
 package com.example.echat.server.chat
 
 import android.util.Log
-import com.example.echat.data.model.Message
+import com.example.echat.server.data.model.Message
 import com.example.echat.server.chat.dto.MessageDTO
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText

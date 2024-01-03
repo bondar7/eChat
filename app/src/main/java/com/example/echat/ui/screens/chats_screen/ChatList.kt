@@ -2,6 +2,7 @@ package com.example.echat.ui.screens.chats_screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,32 +33,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echat.R
+import com.example.echat.server.data.model.ChatSession
+import com.example.echat.ui.CircularUserAvatar
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 
 @Composable
-fun ChatList(chats: List<ChatModel>) {
+fun ChatList(chats: List<ChatSession>, onChatClick: (userId: String) -> Unit) {
     LazyColumn(verticalArrangement = Arrangement.spacedBy(25.dp)) {
         items(items = chats) {
-            ListItem(chat = it)
+            ListItem(chat = it, onChatClick = { onChatClick(it) })
         }
     }
 }
 
-data class ChatModel(
-    val image: ImageVector,
-    val username: String,
-    val lastMessage: String,
-    val isUserOnline: Boolean,
-    val isUserTyping: Boolean,
-    val lastMessageTime: String,
-    val unreadMessages: Int = 0,
-)
-
 @Composable
-fun ListItem(chat: ChatModel) {
+fun ListItem(chat: ChatSession, onChatClick: (userId: String) -> Unit) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onChatClick(chat.user.id) }
+        ,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
@@ -66,13 +62,7 @@ fun ListItem(chat: ChatModel) {
                 .clip(CircleShape)
                 .size(65.dp)
         ) {
-            Image(
-                imageVector = chat.image,
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(65.dp)
-            )
+            CircularUserAvatar(avatar = chat.user.avatar, imageSize = 65.dp)
         }
 
         Row(
@@ -83,70 +73,58 @@ fun ListItem(chat: ChatModel) {
             Column() {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        text = chat.username, style = TextStyle(
+                        text = chat.user.name, style = TextStyle(
                             fontFamily = gliroy,
                             fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    Box(modifier = Modifier
-                        .clip(CircleShape)
-                        .size(10.dp)
-                        .background(if (chat.isUserOnline) Color.Green else Color.Gray))
-                }
-                Spacer(modifier = Modifier.height(5.dp))
-                if (chat.isUserTyping) {
-                    Text(
-                        text = "${chat.username} is typing...", style = TextStyle(
-                            color = ElementColor,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Medium
-                        )
-                    )
-                } else {
-                    Text(
-                        text = chat.lastMessage, style = TextStyle(
-                            color = Color.Gray,
-                            fontFamily = gliroy,
-                            fontSize = 15.sp
+                            fontWeight = FontWeight.Medium,
                         ),
                         maxLines = 1
                     )
+//                    Spacer(modifier = Modifier.width(5.dp))
+////                    Box(modifier = Modifier
+////                        .clip(CircleShape)
+////                        .size(10.dp)
+////                        .background(if (chat.isUserOnline) Color.Green else Color.Gray))
+//                }
+//                Spacer(modifier = Modifier.height(5.dp))
+////                if (chat.isUserTyping) {
+////                    Text(
+////                        text = "${chat.username} is typing...", style = TextStyle(
+////                            color = ElementColor,
+////                            fontSize = 15.sp,
+////                            fontWeight = FontWeight.Medium
+////                        )
+////                    )
+////                } else {
+////                }
                 }
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(
+                    text = chat.lastMessage, style = TextStyle(
+                        color = Color.Gray,
+                        fontFamily = gliroy,
+                        fontSize = 15.sp
+                    ),
+                    maxLines = 1
+                )
+
+//            if (chat.unreadMessages == 0) {
+//                Text(text = chat.lastMessageTime, color = Color.Gray, fontSize = 13.sp)
+//            } else {
+//                Box(
+//                    modifier = Modifier
+//                        .background(ElementColor)
+//                        .clip(CircleShape)
+//                ) {
+//                    Text(
+//                        text = chat.unreadMessages.toString(),
+//                        color = Color.White,
+//                        modifier = Modifier.padding(10.dp)
+//                    )
+//                }
+//            }
             }
 
-            if (chat.unreadMessages == 0) {
-                Text(text = chat.lastMessageTime, color = Color.Gray, fontSize = 13.sp)
-            } else {
-                Box(
-                    modifier = Modifier
-                        .background(ElementColor)
-                        .clip(CircleShape)
-                ) {
-                    Text(
-                        text = chat.unreadMessages.toString(),
-                        color = Color.White,
-                        modifier = Modifier.padding(10.dp)
-                    )
-                }
-            }
         }
-
     }
-}
-
-@Preview
-@Composable
-fun ListItemPreview() {
-    ListItem(chat = ChatModel(
-        image = Icons.Default.Person,
-        username = "Maksim Bondar",
-        lastMessage = "I love them! Lets go.",
-        isUserOnline = false,
-        isUserTyping = false,
-        lastMessageTime = "08:34",
-        unreadMessages = 0
-    )
-    )
 }

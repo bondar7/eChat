@@ -20,6 +20,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.echat.R
 
@@ -38,8 +39,8 @@ fun CircularUserAvatar(
             painter = if (avatar == null) {
                 painterResource(id = R.drawable.avatar)
             } else {
-                rememberImagePainter(
-                    data = avatar
+                rememberAsyncImagePainter(
+                    model = avatar
                 )
             },
             contentDescription = null,
