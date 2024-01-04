@@ -18,10 +18,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echat.server.data.model.Message
 import com.example.echat.ui.theme.ElementColor
+import com.example.echat.ui.theme.gliroy
 
 @Composable
 fun ChatScreenMessagesList(
@@ -65,12 +68,24 @@ private fun MessageListItem(
                     )
                     .padding(8.dp)
             ) {
-                Text(text = message.content, color = Color.White)
+                Text(
+                    text = message.content,
+                    style = TextStyle(
+                        color = Color.White,
+                        fontFamily = gliroy,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Medium
+                    )
+                )
                 Spacer(modifier = Modifier.height(3.dp))
                 Text(
                     text = message.formattedTime,
-                    color = Color.White,
-                    fontSize = 13.sp,
+                    style = TextStyle(
+                        color = Color.White,
+                        fontFamily = gliroy,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 13.sp
+                    ),
                     modifier = Modifier.align(Alignment.End)
                 )
             }

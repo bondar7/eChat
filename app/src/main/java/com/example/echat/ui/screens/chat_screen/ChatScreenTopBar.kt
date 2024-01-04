@@ -17,20 +17,22 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.echat.navigation.Screen
 import com.example.echat.server.data.model.Person
-import com.example.echat.ui.CircularUserAvatar
-import com.example.echat.ui.screens.detailed_user_screen.DetailedUserScreen
+import com.example.echat.ui.circular_avatar.CircularUserAvatar
 import com.example.echat.ui.theme.ElementColor
+import com.example.echat.ui.theme.gliroy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +49,7 @@ fun ChatScreenTopBar(
                     Box(modifier = Modifier
                         .clip(CircleShape)
                         .clickable {
-                           navController.navigate(Screen.DetailedUserScreen.route)
+                            navController.navigate(Screen.DetailedUserScreen.route)
                         }) {
                         CircularUserAvatar(
                             avatar = selectedUser?.avatar,
@@ -58,15 +60,21 @@ fun ChatScreenTopBar(
                     Column {
                         Text(
                             text = selectedUser?.name ?: "Unknown User",
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 14.sp,
-                            color = Color.Black
+                            style = TextStyle(
+                                color = Color.Black,
+                                fontSize = 15.sp,
+                                fontFamily = gliroy,
+                                fontWeight = FontWeight.Medium
+                            )
                         )
                         Text(
                             text = "Is online now",
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 12.sp,
-                            color = Color.Gray
+                            style = TextStyle(
+                                color = Color.Gray,
+                                fontSize = 12.sp,
+                                fontFamily = gliroy,
+                                fontWeight = FontWeight.Medium
+                            )
                         )
                     }
                 }
@@ -103,6 +111,9 @@ fun ChatScreenTopBar(
                     tint = ElementColor
                 )
             }
-        }
+        },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = Color.White
+        )
     )
 }

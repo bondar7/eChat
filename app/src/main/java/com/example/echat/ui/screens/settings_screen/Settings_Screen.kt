@@ -24,7 +24,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material.icons.outlined.WbSunny
@@ -50,26 +49,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.echat.MainViewModel
 import com.example.echat.navigation.Screen
-import com.example.echat.ui.CircularUserAvatar
+import com.example.echat.server.auth.AuthViewModel
+import com.example.echat.ui.circular_avatar.CircularUserAvatar
 import com.example.echat.ui.navigation_bar.BottomNavigationBar
 import com.example.echat.ui.photo_picker.PhotoPicker
+import com.example.echat.ui.photo_picker.uriToByteArray
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "CommitPrefEdits")
 @Composable
 fun SettingsScreen(
     navHostController: NavHostController,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    authViewModel: AuthViewModel,
 ) {
     val user = viewModel.user.value
+    val context = LocalContext.current
     val prefs = LocalContext.current.getSharedPreferences("prefs", MODE_PRIVATE)
 
     var showPhotoPicker by remember {
@@ -91,7 +95,18 @@ fun SettingsScreen(
 
         // photo picker
         if (showPhotoPicker) {
-            PhotoPicker()
+            PhotoPicker(
+                onResult = {uri ->
+                    if (uri != null && user != null) {
+                        CoroutineScope(Dispatchers.Default).launch {
+                            val byteArray = uriToByteArray(context, uri)
+                            if (byteArray != null) {
+                                authViewModel.changeAvatar(user.username, byteArray)
+                            }
+                        }
+                    }
+                }
+            )
         }
 
         if (showFullPhoto && user?.avatar != null) {

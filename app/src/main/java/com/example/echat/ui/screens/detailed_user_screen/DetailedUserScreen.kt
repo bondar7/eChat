@@ -46,7 +46,7 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.echat.MainViewModel
 import com.example.echat.server.chat.ChatViewModel
-import com.example.echat.ui.CircularUserAvatar
+import com.example.echat.ui.circular_avatar.CircularUserAvatar
 import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
 import com.example.echat.ui.theme.ElementColor
 

@@ -19,6 +19,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,10 +51,13 @@ fun ChatsScreen(
     chatViewModel: ChatViewModel,
     navHostController: NavHostController
 ) {
-    chatsViewModel.getSessionsByUserId()
-
     val chatSessions = chatsViewModel.chatSessions.value
     val context = LocalContext.current
+
+    DisposableEffect(key1 = Unit) {
+        chatsViewModel.getSessionsByUserId()
+        onDispose {  }
+    }
 
     LaunchedEffect(key1 = viewModel, key2 = context) {
         observeAuthResultsAndNavigate(

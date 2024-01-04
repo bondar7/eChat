@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.AttachFile
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,8 +31,9 @@ import com.example.echat.ui.theme.ElementColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
- fun ChatScreenSendMessage(
-    onSendMessage: (String) -> Unit
+fun ChatScreenSendMessage(
+    onSendMessage: (String) -> Unit,
+    onPickerShow: () -> Unit
 ) {
     var textState by remember {
         mutableStateOf("")
@@ -70,6 +72,15 @@ import com.example.echat.ui.theme.ElementColor
                     .weight(1f)
                     .height(50.dp),
                 singleLine = true,
+                trailingIcon = {
+                    IconButton(onClick = { onPickerShow() }) {
+                        Icon(
+                            imageVector = Icons.Default.AttachFile,
+                            contentDescription = null,
+                            tint = Color.DarkGray
+                        )
+                    }
+                }
             )
             IconButton(
                 onClick = {

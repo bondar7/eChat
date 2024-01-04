@@ -40,5 +40,4 @@ class MyWebSocketListener(
     fun sendMessage(webSocket: WebSocket, message: String) {
         webSocket.send(message)
     }
-
 }

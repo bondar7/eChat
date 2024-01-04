@@ -18,25 +18,16 @@ import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.InputStream
+import java.net.URI
 
 @Composable
 fun PhotoPicker(
-    authViewModel: AuthViewModel = hiltViewModel(),
-    mainViewModel: MainViewModel = hiltViewModel()
+    onResult: (uri: Uri?) -> Unit
 ) {
-    val user = mainViewModel.user.value
-    val context = LocalContext.current
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            if (uri != null && user != null) {
-                CoroutineScope(Dispatchers.Default).launch {
-                    val byteArray = uriToByteArray(context, uri)
-                    if (byteArray != null) {
-                        authViewModel.changeAvatar(user.username, byteArray)
-                    }
-                }
-            }
+            onResult(uri)
         }
     )
 
@@ -54,7 +45,7 @@ fun PhotoPicker(
 }
 
 // Функція, яка конвертує URI в байти
-private suspend fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
+ suspend fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
     return withContext(Dispatchers.IO) {
         try {
             val inputStream: InputStream? = context.contentResolver.openInputStream(uri)

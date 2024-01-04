@@ -79,7 +79,8 @@ fun SetupNavGraph(
         ) {
             SettingsScreen(
                 navController,
-                mainViewModel
+                mainViewModel,
+                authViewModel
             )
         }
         composable(
