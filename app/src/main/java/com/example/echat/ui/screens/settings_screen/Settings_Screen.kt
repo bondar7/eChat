@@ -2,6 +2,7 @@ package com.example.echat.ui.screens.settings_screen
 
 import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,6 +50,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.core.net.toUri
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.echat.MainViewModel
@@ -100,6 +102,11 @@ fun SettingsScreen(
                     if (uri != null && user != null) {
                         CoroutineScope(Dispatchers.Default).launch {
                             val byteArray = uriToByteArray(context, uri)
+                            val stringUri = uri.toString()
+                            val uriAgain = stringUri.toUri()
+                            Log.d("URI", stringUri)
+                            Log.d("IS CONVERTED URI EQUELS TH FIRST ONE",
+                                "${uri.equals(uriAgain)}")
                             if (byteArray != null) {
                                 authViewModel.changeAvatar(user.username, byteArray)
                             }
@@ -117,7 +124,11 @@ fun SettingsScreen(
                     .background(Color.Black.copy(alpha = 0.5f)),
                 contentAlignment = Alignment.Center
             ) {
-                Column() {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                         IconButton(
                             onClick = { showFullPhoto = false },

@@ -12,7 +12,8 @@ data class MessageDTO(
     val sessionId: String,
     val senderId: String,
     val senderUsername: String,
-    val content: String,
+    val text: String?,
+    val image: ByteArray?,
     val timestamp: Long,
     val id: String
 ) {
@@ -26,7 +27,8 @@ data class MessageDTO(
         val formattedTime = timeFormat.format(date)
 
         return Message(
-            content = content,
+            text = text,
+            image = image,
             formattedTime = formattedTime,
             username = senderUsername,
             senderId = senderId

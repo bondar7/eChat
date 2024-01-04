@@ -3,6 +3,7 @@ package com.example.echat.server.chat
 import android.util.Log
 import com.example.echat.server.data.model.Message
 import com.example.echat.server.chat.dto.MessageDTO
+import io.ktor.http.ContentType.Application.ProtoBuf
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
 import kotlinx.coroutines.flow.Flow
@@ -11,6 +12,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import okio.ByteString
+import okio.ByteString.Companion.toByteString
 
 class MyWebSocketListener(
     private val chatViewModel: ChatViewModel
@@ -39,5 +42,11 @@ class MyWebSocketListener(
     // Метод для відправлення повідомлення
     fun sendMessage(webSocket: WebSocket, message: String) {
         webSocket.send(message)
+    }
+
+    // Метод для відправлення картинки в байтах
+    fun sendImageMessage(webSocket: WebSocket, image: ByteArray) {
+        val byteString: ByteString = image.toByteString()
+        webSocket.send(byteString)
     }
 }

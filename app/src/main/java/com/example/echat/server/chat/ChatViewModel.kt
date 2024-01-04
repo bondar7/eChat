@@ -88,6 +88,15 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    fun sendImageMessage(image: ByteArray) {
+        val socket = webSocket.value
+        if (socket != null) {
+            CoroutineScope(Dispatchers.IO).launch {
+                myWebSocketListener.sendImageMessage(socket, image)
+            }
+        }
+    }
+
     private fun getMessagesBySessionId() {
         if (_selectedSessionId.value.isNotBlank()) {
             CoroutineScope(Dispatchers.IO).launch {
