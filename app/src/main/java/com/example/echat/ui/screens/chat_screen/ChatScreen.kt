@@ -1,8 +1,6 @@
 package com.example.echat.ui.screens.chat_screen
 
 import android.annotation.SuppressLint
-import android.util.Base64
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,10 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.multiple_photo_picker.MultiplePhotoPicker
-import com.example.echat.ui.photo_picker.PhotoPicker
 import com.example.echat.ui.photo_picker.uriToByteArray
 import com.example.echat.ui.theme.ElementColor
 import kotlinx.coroutines.CoroutineScope
@@ -120,44 +116,45 @@ fun ChatScreen(
                     showPhotoPicker = !showPhotoPicker
                 }
             )
-        }
-    ) {
-        if (showPhotoPicker) {
-            MultiplePhotoPicker(
-                onResult = { uris ->
-                    CoroutineScope(Dispatchers.IO).launch {
-                        uris.forEach { uri ->
-                            if (uri != null) {
-                                val byteArray = uriToByteArray(context, uri)
-                                if (byteArray != null) {
-                                    chatViewModel.sendImageMessage(byteArray)
+        },
+        content = {
+            if (showPhotoPicker) {
+                MultiplePhotoPicker(
+                    onResult = { uris ->
+                        CoroutineScope(Dispatchers.IO).launch {
+                            uris.forEach { uri ->
+                                if (uri != null) {
+                                    val byteArray = uriToByteArray(context, uri)
+                                    if (byteArray != null) {
+                                        chatViewModel.sendImageMessage(byteArray)
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            )
-        }
+                )
+            }
 
-        if (state.isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(45.dp),
-                    color = ElementColor,
-                    strokeWidth = 4.5.dp
-                )
-            }
-        } else {
-            if (selectedUser?.id != null) {
-                ChatScreenMessagesList(
-                    state.messages,
-                    selectedUser.id,
-                    onImageMessageClick = {
-                        showFullPhoto = !showFullPhoto
-                        selectedPhoto = it
-                    }
-                )
+            if (state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(45.dp),
+                        color = ElementColor,
+                        strokeWidth = 4.5.dp
+                    )
+                }
+            } else {
+                if (selectedUser?.id != null) {
+                    ChatScreenMessagesList(
+                        state.messages,
+                        selectedUser.id,
+                        onImageMessageClick = {
+                            showFullPhoto = !showFullPhoto
+                            selectedPhoto = it
+                        }
+                    )
+                }
             }
         }
-    }
+    )
 }

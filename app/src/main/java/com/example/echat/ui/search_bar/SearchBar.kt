@@ -42,7 +42,7 @@ fun SearchBar(
         onValueChange = {
             onTextChange(it)
             onSearch()
-                        },
+        },
         singleLine = true,
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = Color.Gray)
@@ -57,7 +57,7 @@ fun SearchBar(
             containerColor = Color(0xFFF7F7FA),
             unfocusedBorderColor = Color.Transparent,
             focusedBorderColor = Color.Transparent,
-            ),
+        ),
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = ImeAction.Search
         ),
@@ -69,8 +69,10 @@ fun SearchBar(
         )
     )
 }
+
 private fun hideKeyboard(context: Context) {
-    val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    val inputMethodManager =
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     val currentFocusedView = (context as Activity).currentFocus
     currentFocusedView?.let {
         inputMethodManager.hideSoftInputFromWindow(

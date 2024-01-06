@@ -66,6 +66,7 @@ fun DetailedUserScreen(
     }
 
     Scaffold(
+        containerColor = Color.White,
         topBar = {
             TopAppBar(
                 title = {},
@@ -110,7 +111,7 @@ fun DetailedUserScreen(
                     }
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = Color(0xFFF7F7FA)
+                    containerColor = Color.White
                 )
             )
         }
@@ -151,7 +152,6 @@ fun DetailedUserScreen(
                 .fillMaxSize()
                 .background(Color.White)
                 .padding(top = 64.dp)
-                .background(Color(0xFFF7F7FA))
         ) {
             Row(
                 modifier = Modifier

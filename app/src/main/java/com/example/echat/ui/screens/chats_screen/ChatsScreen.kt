@@ -86,7 +86,7 @@ fun ChatsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Hello ${viewModel.user.value?.name} 👋", style = TextStyle(
+                    text = "Welcome to eChat👋", style = TextStyle(
                         color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,

@@ -38,7 +38,7 @@ import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.MainBackgroundColor
 
 @Composable
-fun BottomNavigationBar(viewModel: MainViewModel = hiltViewModel(), navController: NavHostController) {
+fun BottomNavigationBar(navController: NavHostController) {
     val navigationBarItems = listOf<BottomNavigationIcon>(
         BottomNavigationIcon(
             selectedIcon = Icons.Default.Message,
