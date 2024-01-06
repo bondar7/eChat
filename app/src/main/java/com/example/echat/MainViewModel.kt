@@ -10,8 +10,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val prefs: SharedPreferences
-): ViewModel() {
+    private val prefs: SharedPreferences,
+) : ViewModel() {
 
     private val _user = mutableStateOf(loadUser())
     val user = _user
@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
         _isAvatarLoading.value = isLoading
     }
 
-  private fun loadUser(): User? {
+    private fun loadUser(): User? {
         val gson = Gson()
         val userJson = prefs.getString("USER", null)
         return if (userJson != null) {

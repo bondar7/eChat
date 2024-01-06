@@ -54,7 +54,6 @@ android {
 }
 
 dependencies {
-
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.activity:activity-compose:1.8.2")
@@ -72,13 +71,13 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // more material icons
+    // More material icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
 
-    // navigation
+    // Navigation
     implementation("androidx.navigation:navigation-compose:2.7.6")
 
-    // animations
+    // Animations
     implementation("com.google.accompanist:accompanist-navigation-animation:0.33.2-alpha")
 
     // Dagger - Hilt
@@ -99,18 +98,24 @@ dependencies {
     implementation("io.ktor:ktor-client-logging:1.6.3")
     implementation("ch.qos.logback:logback-classic:1.2.6")
 
+    // Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
 
+    // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    // Okhttp
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
-    // splash screen
+    // Splash screen
     implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
 
+    // Live data
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
 
+    // Coil
     implementation("io.coil-kt:coil-compose:2.1.0")
 
-    // okhttp
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    // OneSignal SDK (push notifications)
+    implementation("com.onesignal:OneSignal:[5.0.0, 5.99.99]")
 }

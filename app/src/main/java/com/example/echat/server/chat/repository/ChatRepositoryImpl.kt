@@ -3,6 +3,7 @@ package com.example.echat.server.chat.repository
 import android.content.SharedPreferences
 import android.util.Log
 import com.echat_backend.data.requests.CreateSessionRequest
+import com.example.echat.MainViewModel
 import com.example.echat.server.data.model.Message
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.server.chat.MyWebSocketListener
@@ -18,7 +19,7 @@ class ChatRepositoryImpl(
     override suspend fun connectToWebSocket(
         currentUserId: String,
         currentSessionId: String,
-        chatViewModel: ChatViewModel
+        chatViewModel: ChatViewModel,
     ) {
         Log.d("currentUserId:", currentUserId)
         Log.d("currentSessionId:", currentSessionId)

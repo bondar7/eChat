@@ -1,18 +1,14 @@
 package com.example.echat.server.chat
 
-import android.content.SharedPreferences
 import android.util.Log
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.example.echat.EChatApp
 import com.example.echat.MainViewModel
 import com.example.echat.navigation.Screen
 import com.example.echat.server.data.model.Message
-import com.example.echat.server.auth.repository.AuthRepository
 import com.example.echat.server.chat.repository.ChatRepository
 import com.example.echat.server.data.model.Person
 import com.example.echat.server.session.repository.SessionRepository
@@ -21,17 +17,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.WebSocket
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatViewModel @Inject constructor(
     private val chatRepository: ChatRepository,
-    private val sessionRepository: SessionRepository
+    private val sessionRepository: SessionRepository,
 ) : ViewModel() {
-
     private val myWebSocketListener = MyWebSocketListener(this@ChatViewModel)
 
     private var webSocket: MutableState<WebSocket?> = mutableStateOf(null)
@@ -46,6 +39,7 @@ class ChatViewModel @Inject constructor(
     fun updateSelectedUser(newUser: Person) {
         _selectedUser.value = newUser
     }
+
     fun startChat(user1Id: String, currentUserId: String, navController: NavHostController) {
         CoroutineScope(Dispatchers.IO).launch {
             // create or get existing session
@@ -67,8 +61,8 @@ class ChatViewModel @Inject constructor(
                 )
             }
             withContext(Dispatchers.Main) {
-                    Log.d("SELECTED USER:", _selectedUser.value?.username.toString())
-                    navController.navigate(Screen.ChatScreen.route)
+                Log.d("SELECTED USER:", _selectedUser.value?.username.toString())
+                navController.navigate(Screen.ChatScreen.route)
             }
         }
     }
@@ -109,8 +103,12 @@ class ChatViewModel @Inject constructor(
             }
         }
     }
-
-
+    
+    fun closeChat() {
+        webSocket.value?.close(1000, "User left the chat")
+        updateSelectedSessionId("")
+    }
+    
     fun setWebSocket(socket: WebSocket) {
         webSocket.value = socket
     }

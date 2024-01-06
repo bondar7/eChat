@@ -1,13 +1,8 @@
 package com.example.echat.server.chat
 
 import android.util.Log
-import com.example.echat.server.data.model.Message
+import com.example.echat.MainViewModel
 import com.example.echat.server.chat.dto.MessageDTO
-import io.ktor.http.ContentType.Application.ProtoBuf
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.readText
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import okhttp3.WebSocket
@@ -16,7 +11,7 @@ import okio.ByteString
 import okio.ByteString.Companion.toByteString
 
 class MyWebSocketListener(
-    private val chatViewModel: ChatViewModel
+    private val chatViewModel: ChatViewModel,
 ) : WebSocketListener() {
     override fun onMessage(webSocket: WebSocket, text: String) {
         val messageDto = Json.decodeFromString<MessageDTO>(text)

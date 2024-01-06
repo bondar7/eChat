@@ -37,8 +37,9 @@ import com.example.echat.ui.theme.gliroy
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreenTopBar(
-    navController: NavHostController,
     selectedUser: Person?,
+    navHostController: NavHostController,
+    onCloseChat: () -> Unit
 ) {
     TopAppBar(
         title = {
@@ -49,7 +50,7 @@ fun ChatScreenTopBar(
                     Box(modifier = Modifier
                         .clip(CircleShape)
                         .clickable {
-                            navController.navigate(Screen.DetailedUserScreen.route)
+                            navHostController.navigate(Screen.DetailedUserScreen.route)
                         }) {
                         CircularUserAvatar(
                             avatar = selectedUser?.avatar,
@@ -81,7 +82,7 @@ fun ChatScreenTopBar(
             }
         },
         navigationIcon = {
-            IconButton(onClick = {  navController.popBackStack() }) {
+            IconButton(onClick = {  onCloseChat() }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Default.ArrowBack,
                     contentDescription = null,

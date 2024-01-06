@@ -1,11 +1,16 @@
 package com.example.echat.server.auth
 
+import android.content.SharedPreferences
 import android.util.Patterns
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.echat.navigation.Screen
 import com.example.echat.server.auth.repository.AuthRepository
+import com.onesignal.OneSignal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -172,6 +177,20 @@ class AuthViewModel @Inject constructor(
         CoroutineScope(Dispatchers.IO).launch {
             val result = authRepository.authenticate()
             resultChannel.send(result)
+        }
+    }
+
+    // LOGOUT
+    fun logout(prefs: SharedPreferences, navController: NavHostController) {
+        // remove from prefs saved user
+        prefs.edit().remove("USER").apply()
+        // remove the External ID
+        OneSignal.logout()
+        // move to sign in screen
+        navController.navigate(Screen.SignIn.route) {
+            popUpTo(Screen.SettingsScreen.route) {
+                inclusive = true
+            }
         }
     }
 }

@@ -226,12 +226,7 @@ fun SettingsScreen(
                         }
                     }
                     IconButton(onClick = {
-                        prefs.edit().remove("USER").apply()
-                        navHostController.navigate(Screen.SignIn.route) {
-                            popUpTo(Screen.SettingsScreen.route) {
-                                inclusive = true
-                            }
-                        }
+                        authViewModel.logout(prefs, navHostController)
                     }) {
                         Icon(imageVector = Icons.AutoMirrored.Default.Logout, contentDescription = null)
                     }

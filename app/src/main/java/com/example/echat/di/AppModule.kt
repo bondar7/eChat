@@ -1,6 +1,7 @@
 package com.example.echat.di
 
 import android.app.Application
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.echat.MainViewModel
@@ -8,7 +9,6 @@ import com.example.echat.server.auth.api.AuthApi
 import com.example.echat.server.auth.repository.AuthRepository
 import com.example.echat.server.auth.repository.AuthRepositoryImpl
 import com.example.echat.server.auth.AuthViewModel
-import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.server.chat.chatApi.ChatApi
 import com.example.echat.server.chat.repository.ChatRepository
 import com.example.echat.server.chat.repository.ChatRepositoryImpl
@@ -76,12 +76,6 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideMainViewModel(prefs: SharedPreferences): MainViewModel {
-        return MainViewModel(prefs)
-    }
-
-    @Provides
-    @Singleton
     fun provideAuthRepository(
         api: AuthApi,
         prefs: SharedPreferences,
@@ -112,6 +106,20 @@ object AppModule {
         api: SessionApi,
     ): SessionRepository {
         return SessionRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
+
+    @Provides
+    @Singleton
+    fun provideMainViewModel(
+        prefs: SharedPreferences,
+    ): MainViewModel {
+        return MainViewModel(prefs)
     }
 
     @Provides

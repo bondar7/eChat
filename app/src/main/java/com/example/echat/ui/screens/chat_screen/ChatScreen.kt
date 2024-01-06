@@ -20,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +56,13 @@ fun ChatScreen(
     var showPhotoPicker: Boolean by remember { mutableStateOf(false) }
     var showFullPhoto: Boolean by remember { mutableStateOf(false) }
     var selectedPhoto: ByteArray? by remember { mutableStateOf(null) }
+
+
+    DisposableEffect(navController) {
+        onDispose {
+            chatViewModel.closeChat()
+        }
+    }
 
     if (showFullPhoto && selectedPhoto != null) {
         Box(
@@ -94,8 +102,11 @@ fun ChatScreen(
         containerColor = Color(0xFFF7F7FA),
         topBar = {
             ChatScreenTopBar(
-                navController = navController,
                 selectedUser = selectedUser,
+                navController,
+                onCloseChat = {
+                    navController.popBackStack()
+                }
             )
         },
         bottomBar = {
@@ -111,7 +122,6 @@ fun ChatScreen(
             )
         }
     ) {
-
         if (showPhotoPicker) {
             MultiplePhotoPicker(
                 onResult = { uris ->

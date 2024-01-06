@@ -19,6 +19,7 @@ import com.example.echat.server.auth.requests.LogInRequest
 import com.example.echat.server.auth.requests.SignUpRequest
 import com.example.echat.server.data.model.User
 import com.google.gson.Gson
+import com.onesignal.OneSignal
 
 class AuthRepositoryImpl(
     private val authApi: AuthApi,
@@ -63,6 +64,8 @@ class AuthRepositoryImpl(
             Log.d("RECEIVED AVATAR:", response.avatar.toString())
             saveUser(receivedUser)
             mainViewModel.updateUser(receivedUser)
+            // OneSignal login (set External ID)
+            OneSignal.login(response.id)
             AuthResult.Authorized()
         } catch (e: HttpException) {
             if (e.code() == 401) {
@@ -235,20 +238,25 @@ class AuthRepositoryImpl(
             authApi.authenticate("Bearer ${user.token}")
             AuthResult.Authorized()
         } catch (e: HttpException) {
-            removeUser()
+            logout()
             if (e.code() == 401) {
                 AuthResult.Unauthorized()
             } else {
                 AuthResult.UnknownError()
             }
         } catch (e: Exception) {
-            removeUser()
+            logout()
             AuthResult.UnknownError()
         }
     }
-
     private val gson = Gson()
+    private fun logout() {
+        removeUser()
+        OneSignal.logout()
+    }
 
+
+    // prefs
     fun saveUser(user: User) {
         val editor = prefs.edit()
         val userJson = gson.toJson(user)
