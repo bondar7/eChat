@@ -82,7 +82,11 @@ fun ChatScreenTopBar(
                         Box(modifier = Modifier
                             .clip(CircleShape)
                             .clickable {
-                                navHostController.navigate(Screen.DetailedUserScreen.route)
+                                navHostController.navigate(Screen.DetailedUserScreen.route) {
+                                    popUpTo(Screen.ChatScreen.route) {
+                                        inclusive = true
+                                    }
+                                }
                             }) {
                             CircularUserAvatar(
                                 avatar = selectedUser?.avatar,

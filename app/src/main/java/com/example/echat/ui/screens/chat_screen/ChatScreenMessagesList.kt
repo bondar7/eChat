@@ -43,7 +43,7 @@ fun ChatScreenMessagesList(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 10.dp, end = 10.dp, top = 70.dp, bottom = 100.dp),
+            .padding(start = 10.dp, end = 10.dp, top = 100.dp, bottom = 100.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
         reverseLayout = true
     ) {

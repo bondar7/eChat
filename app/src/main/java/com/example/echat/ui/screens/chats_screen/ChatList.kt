@@ -1,5 +1,6 @@
 package com.example.echat.ui.screens.chats_screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -60,7 +61,7 @@ private fun ListItem(
     ) {
         Box(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(15.dp)
                 .clip(CircleShape)
                 .size(65.dp)
         ) {
@@ -81,14 +82,14 @@ private fun ListItem(
                     Text(
                         text = chat.user.name, style = TextStyle(
                             fontFamily = gliroy,
-                            fontSize = 18.sp,
+                            fontSize = 19.sp,
                             fontWeight = FontWeight.Medium,
                         ),
                         maxLines = 1
                     )
                     Text(
                         text = formatTimestamp(chat.lastMessageSentTime),
-                        color = Color.Black,
+                        color = Color.Gray,
                         fontFamily = gliroy,
                         fontWeight = FontWeight.Medium,
                         fontSize = 13.sp,

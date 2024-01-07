@@ -102,11 +102,6 @@ fun SettingsScreen(
                     if (uri != null && user != null) {
                         CoroutineScope(Dispatchers.Default).launch {
                             val byteArray = uriToByteArray(context, uri)
-                            val stringUri = uri.toString()
-                            val uriAgain = stringUri.toUri()
-                            Log.d("URI", stringUri)
-                            Log.d("IS CONVERTED URI EQUELS TH FIRST ONE",
-                                "${uri.equals(uriAgain)}")
                             if (byteArray != null) {
                                 authViewModel.changeAvatar(user.username, byteArray)
                             }

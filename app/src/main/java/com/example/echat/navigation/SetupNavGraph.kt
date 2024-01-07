@@ -1,13 +1,18 @@
 package com.example.echat.navigation
 
 import android.content.SharedPreferences
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -65,6 +70,7 @@ fun SetupNavGraph(
         }
         composable(
             Screen.ChatsScreen.route,
+            popEnterTransition = { fadeIn(animationSpec = tween(0)) },
         ) {
             ChatsScreen(
                 mainViewModel,
@@ -76,6 +82,7 @@ fun SetupNavGraph(
         }
         composable(
             Screen.SettingsScreen.route,
+            popEnterTransition = { fadeIn(animationSpec = tween(0)) },
         ) {
             SettingsScreen(
                 navController,
@@ -84,16 +91,30 @@ fun SetupNavGraph(
             )
         }
         composable(
+            Screen.SearchUsersScreen.route,
+            popEnterTransition = { fadeIn(animationSpec = tween(0)) },
+        ) {
+            SearchUsersScreen(
+                navController,
+                searchUsersViewModel,
+                chatViewModel
+            )
+        }
+        composable(
             Screen.EditUserBioScreen.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }) },
         ) {
             EditBioScreen(
-               navController,
+                navController,
                 authViewModel,
                 mainViewModel
             )
         }
         composable(
             Screen.EditUsernameScreen.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }) },
         ) {
             EditUsernameScreen(
                 "Username",
@@ -105,6 +126,8 @@ fun SetupNavGraph(
         }
         composable(
             Screen.EditNameScreen.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }) },
         ) {
             EditNameScreen(
                 "Name",
@@ -116,6 +139,8 @@ fun SetupNavGraph(
         }
         composable(
             Screen.EditPasswordScreen.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }) },
         ) {
             EditPasswordScreen(
                 mainViewModel,
@@ -125,6 +150,8 @@ fun SetupNavGraph(
         }
         composable(
             Screen.EditEmailScreen.route,
+            enterTransition = { slideInHorizontally(initialOffsetX = { fullWidth -> fullWidth }, ) },
+            exitTransition = { slideOutHorizontally(targetOffsetX = { fullWidth -> fullWidth }) },
         ) {
             EditEmailScreen(
                 mainViewModel,
@@ -133,26 +160,28 @@ fun SetupNavGraph(
             )
         }
         composable(
-            Screen.SearchUsersScreen.route,
-        ) {
-            SearchUsersScreen(
-                navController,
-                searchUsersViewModel,
-                chatViewModel
-            )
-        }
-        composable(
             route = Screen.DetailedUserScreen.route,
+            enterTransition = { fadeIn(animationSpec = tween(300)) },
+            exitTransition = { fadeOut(animationSpec = tween(500)) },
         ) {
             DetailedUserScreen(
                 navController = navController,
-                searchUsersViewModel = searchUsersViewModel,
                 chatViewModel = chatViewModel,
                 mainViewModel = mainViewModel
             )
         }
         composable(
             Screen.ChatScreen.route,
+            enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { fullWidth -> fullWidth },
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth },
+                )
+            },
         ) {
             ChatScreen(
                 navController = navController,
@@ -162,13 +191,6 @@ fun SetupNavGraph(
     }
 }
 
-private val slideOutHorizontally = slideOutHorizontally(
-    targetOffsetX = { 2000 },
-    animationSpec = tween(
-        durationMillis = 400,
-        easing = FastOutSlowInEasing
-    )
-)
 private val slideInHorizontally = slideInHorizontally(
     initialOffsetX = { 2000 },
     animationSpec = tween(

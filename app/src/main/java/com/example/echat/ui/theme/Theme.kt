@@ -57,7 +57,7 @@ fun EChatTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = Color(0xFFFFFFFF).toArgb()
+            window.statusBarColor = Color.Gray.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }

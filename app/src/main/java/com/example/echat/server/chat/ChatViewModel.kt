@@ -62,7 +62,11 @@ class ChatViewModel @Inject constructor(
             }
             withContext(Dispatchers.Main) {
                 Log.d("SELECTED USER:", _selectedUser.value?.username.toString())
-                navController.navigate(Screen.ChatScreen.route)
+                navController.navigate(Screen.ChatScreen.route) {
+                    popUpTo(Screen.DetailedUserScreen.route) {
+                        inclusive = true
+                    }
+                }
             }
         }
     }

@@ -45,6 +45,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.echat.MainViewModel
+import com.example.echat.navigation.Screen
 import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.circular_avatar.CircularUserAvatar
 import com.example.echat.ui.screens.search_users_screen.SearchUsersViewModel
@@ -54,7 +55,6 @@ import com.example.echat.ui.theme.ElementColor
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailedUserScreen(
-    searchUsersViewModel: SearchUsersViewModel,
     navController: NavHostController,
     chatViewModel: ChatViewModel,
     mainViewModel: MainViewModel
@@ -71,7 +71,9 @@ fun DetailedUserScreen(
             TopAppBar(
                 title = {},
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = {
+                        navController.popBackStack()
+                    }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = null,
@@ -96,7 +98,6 @@ fun DetailedUserScreen(
                     }
                     IconButton(onClick = {
                         startChat(
-                            searchUsersViewModel,
                             mainViewModel,
                             chatViewModel,
                             navController
@@ -216,9 +217,10 @@ fun DetailedUserScreen(
                 )
             }
             StartChatIcon(
+                selectedUserId = user?.id,
+                currentUserId = mainViewModel.user.value?.id,
                 onClick = {
                     startChat(
-                        searchUsersViewModel,
                         mainViewModel,
                         chatViewModel,
                         navController
@@ -230,14 +232,13 @@ fun DetailedUserScreen(
 }
 
 private fun startChat(
-    searchUsersViewModel: SearchUsersViewModel,
     mainViewModel: MainViewModel,
     chatViewModel: ChatViewModel,
     navController: NavHostController
 ) {
     val user1Id = chatViewModel.selectedUser.value?.id
     val currentUserId = mainViewModel.user.value?.id
-    if (user1Id != null && currentUserId != null) {
+    if (user1Id != null && currentUserId != null && user1Id != currentUserId) {
         chatViewModel.startChat(
             user1Id = user1Id,
             currentUserId = currentUserId,
@@ -277,24 +278,28 @@ private fun InfoColumn(
 
 @Composable
 private fun StartChatIcon(
+    selectedUserId: String?,
+    currentUserId: String?,
     onClick: () -> Unit,
 ) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
-        Box(
-            modifier = Modifier
-                .padding(15.dp)
-                .clip(CircleShape)
-                .size(65.dp)
-                .background(ElementColor)
-                .clickable { onClick() },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.Message,
-                contentDescription = null,
-                tint = Color.White,
-                modifier = Modifier.size(30.dp)
-            )
+    if (selectedUserId != currentUserId) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomEnd) {
+            Box(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .clip(CircleShape)
+                    .size(65.dp)
+                    .background(ElementColor)
+                    .clickable { onClick() },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.Message,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(30.dp)
+                )
+            }
         }
     }
 }

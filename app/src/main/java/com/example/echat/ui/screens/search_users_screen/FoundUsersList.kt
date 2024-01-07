@@ -70,7 +70,7 @@ private fun ListItem(
     ) {
         Box(
             modifier = Modifier
-                .padding(10.dp)
+                .padding(15.dp)
                 .clip(CircleShape)
                 .size(65.dp)
         ) {
