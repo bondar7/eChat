@@ -56,10 +56,10 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.echat.MainViewModel
 import com.example.echat.navigation.Screen
 import com.example.echat.server.auth.AuthViewModel
-import com.example.echat.ui.circular_avatar.CircularUserAvatar
-import com.example.echat.ui.navigation_bar.BottomNavigationBar
-import com.example.echat.ui.photo_picker.PhotoPicker
-import com.example.echat.ui.photo_picker.uriToByteArray
+import com.example.echat.ui.ui_utils.circular_avatar.CircularUserAvatar
+import com.example.echat.ui.ui_utils.navigation_bar.BottomNavigationBar
+import com.example.echat.ui.ui_utils.photo_picker.PhotoPicker
+import com.example.echat.ui.ui_utils.photo_picker.uriToByteArray
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 import kotlinx.coroutines.CoroutineScope

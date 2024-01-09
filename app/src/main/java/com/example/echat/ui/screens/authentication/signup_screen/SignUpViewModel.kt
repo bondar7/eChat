@@ -2,6 +2,7 @@ package com.example.echat.ui.screens.authentication.signup_screen
 
 import android.util.Patterns
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.echat.server.auth.repository.AuthRepository
@@ -50,7 +51,7 @@ class SignUpViewModel @Inject constructor(
     val pwError = _pwError
 
     // functions
-    fun signUp() {
+    fun signUp(keyboardController: SoftwareKeyboardController?) {
         viewModelScope.launch {
             _isLoading.value = !_isLoading.value
             delay(300)
@@ -73,6 +74,7 @@ class SignUpViewModel @Inject constructor(
                 authViewModel.resultChannel.send(result)
                 _isLoading.value = !_isLoading.value
             }
+            keyboardController?.hide()
         }
     }
     private fun checkUsername(username: String) {

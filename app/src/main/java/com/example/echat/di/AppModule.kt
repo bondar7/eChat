@@ -5,6 +5,10 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.example.echat.MainViewModel
+import com.example.echat.communication.audio.player.AudioPlayer
+import com.example.echat.communication.audio.player.AudioPlayerImpl
+import com.example.echat.communication.audio.recorder.AudioRecorder
+import com.example.echat.communication.audio.recorder.AudioRecorderImpl
 import com.example.echat.server.auth.api.AuthApi
 import com.example.echat.server.auth.repository.AuthRepository
 import com.example.echat.server.auth.repository.AuthRepositoryImpl
@@ -21,6 +25,7 @@ import com.example.echat.server.session.sessionApi.SessionApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -29,7 +34,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-    private const val BASE_URL = "http://192.168.1.2:8080/"
+    private const val BASE_URL = "http://192.168.1.6:8080/"
+
+    // APIs
     @Provides
     @Singleton
     fun provideAuthApi(): AuthApi {
@@ -68,12 +75,21 @@ object AppModule {
             .create(SessionApi::class.java)
     }
 
+    // Shared Preferences
     @Provides
     @Singleton
     fun provideSharedPref(app: Application): SharedPreferences {
         return app.getSharedPreferences("prefs", MODE_PRIVATE)
     }
 
+    // Application CONTEXT
+    @Provides
+    @Singleton
+    fun provideContext(application: Application): Context {
+        return application.applicationContext
+    }
+
+    // Repositories
     @Provides
     @Singleton
     fun provideAuthRepository(
@@ -108,12 +124,7 @@ object AppModule {
         return SessionRepositoryImpl(api)
     }
 
-    @Provides
-    @Singleton
-    fun provideContext(application: Application): Context {
-        return application.applicationContext
-    }
-
+    // View Models
     @Provides
     @Singleton
     fun provideMainViewModel(
@@ -128,4 +139,17 @@ object AppModule {
         return AuthViewModel(authRepository)
     }
 
+    // Audio Recorder
+    @Provides
+    @Singleton
+    fun provideAudioRecorder(context: Context): AudioRecorder {
+        return AudioRecorderImpl(context)
+    }
+
+    // Audio Player
+    @Provides
+    @Singleton
+    fun provideAudioPlayer(context: Context): AudioPlayer {
+        return AudioPlayerImpl(context)
+    }
 }

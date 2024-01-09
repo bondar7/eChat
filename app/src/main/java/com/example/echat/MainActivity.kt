@@ -15,12 +15,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.echat.navigation.SetupNavGraph
 import com.example.echat.server.auth.AuthViewModel
+import com.example.echat.server.chat.ChatViewModel
 import com.example.echat.ui.theme.EChatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     val authViewModel: AuthViewModel by viewModels()
     val mainViewModel: MainViewModel by viewModels()
+    val chatViewModel: ChatViewModel by viewModels()
     lateinit var navController: NavHostController
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -39,6 +42,14 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
+            if (chatViewModel.neededPermissions.value.isNotEmpty()) {
+                ActivityCompat.requestPermissions(
+                    this@MainActivity,
+                    chatViewModel.neededPermissions.value,
+                    1
+                )
+            }
+
             EChatTheme {
                 navController = rememberNavController()
                 val prefs = getSharedPreferences("prefs", MODE_PRIVATE)

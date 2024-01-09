@@ -1,6 +1,7 @@
 package com.example.echat.ui.screens.authentication.login_screen
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.SoftwareKeyboardController
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.echat.server.auth.repository.AuthRepository
@@ -37,7 +38,7 @@ class LogInViewModel @Inject constructor(
         _error.value = error
     }
 
-    fun logIn() {
+    fun logIn(keyboardController: SoftwareKeyboardController?) {
         viewModelScope.launch {
             _isLoading.value = true
             if (_username.value.isNotBlank() && _password.value.isNotBlank()) {
@@ -47,6 +48,7 @@ class LogInViewModel @Inject constructor(
                 setError("Fields cannot be blank")
             }
             _isLoading.value = false
+            keyboardController?.hide()
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.echat.ui.navigation_bar
+package com.example.echat.ui.ui_utils.navigation_bar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

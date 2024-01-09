@@ -27,8 +27,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.R
 import com.example.echat.server.chat.ChatViewModel
-import com.example.echat.ui.navigation_bar.BottomNavigationBar
-import com.example.echat.ui.search_bar.SearchBar
+import com.example.echat.ui.ui_utils.navigation_bar.BottomNavigationBar
+import com.example.echat.ui.ui_utils.search_bar.SearchBar
 import com.example.echat.ui.theme.ElementColor
 
 @OptIn(ExperimentalMaterial3Api::class)

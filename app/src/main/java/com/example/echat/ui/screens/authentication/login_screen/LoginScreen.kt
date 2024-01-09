@@ -1,5 +1,6 @@
 package com.example.echat.ui.screens.authentication.login_screen
 
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -36,12 +39,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.echat.server.auth.AuthResult
@@ -60,6 +66,7 @@ fun LoginScreen(
 ) {
 
     val context = LocalContext.current
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
 
     LaunchedEffect(key1 = viewModel, key2 = context) {
         viewModel.authResults.collect {
@@ -129,13 +136,17 @@ fun LoginScreen(
             ColumnItem(
                 "Username",
                 "Enter your username",
-                logInViewModel.username.value
-            ) { logInViewModel.onUpdateUsername(it) }
+                logInViewModel.username.value,
+                onValueChange = { logInViewModel.onUpdateUsername(it) },
+                onGo = { logInViewModel.logIn(softwareKeyboardController) }
+            )
             ColumnItem(
                 "Password",
                 "Enter your password",
-                logInViewModel.password.value
-            ) { logInViewModel.onUpdatePassword(it) }
+                logInViewModel.password.value,
+                onValueChange = { logInViewModel.onUpdatePassword(it) },
+                onGo = { logInViewModel.logIn(softwareKeyboardController) }
+            )
 
             if (logInViewModel.error.value.isNotBlank()) {
                 Text(text = logInViewModel.error.value, color = Color.Red)
@@ -143,7 +154,7 @@ fun LoginScreen(
             }
             
             TextButton(
-                onClick = { logInViewModel.logIn() }, modifier = Modifier
+                onClick = { logInViewModel.logIn(softwareKeyboardController) }, modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(
@@ -187,6 +198,7 @@ fun ColumnItem(
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
+    onGo: () -> Unit
 ) {
     var passwordVisibility by remember {
         mutableStateOf(text != "Password")
@@ -216,6 +228,12 @@ fun ColumnItem(
                 unfocusedBorderColor = Color.Transparent
             ),
             maxLines = 1,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Go
+            ),
+            keyboardActions = KeyboardActions(
+                onGo = { onGo() }
+            ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 if (text == "Password") {

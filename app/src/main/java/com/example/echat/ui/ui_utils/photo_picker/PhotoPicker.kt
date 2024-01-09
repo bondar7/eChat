@@ -1,4 +1,4 @@
-package com.example.echat.ui.photo_picker
+package com.example.echat.ui.ui_utils.photo_picker
 
 import android.content.Context
 import android.net.Uri

@@ -35,8 +35,8 @@ import com.example.echat.MainViewModel
 import com.example.echat.navigation.Screen
 import com.example.echat.server.auth.AuthViewModel
 import com.example.echat.server.chat.ChatViewModel
-import com.example.echat.ui.navigation_bar.BottomNavigationBar
-import com.example.echat.ui.search_bar.SearchBar
+import com.example.echat.ui.ui_utils.navigation_bar.BottomNavigationBar
+import com.example.echat.ui.ui_utils.search_bar.SearchBar
 import com.example.echat.ui.theme.MainBackgroundColor
 import com.example.echat.ui.theme.gliroy
 import com.example.echat.utils.observeAuthResultsAndNavigate

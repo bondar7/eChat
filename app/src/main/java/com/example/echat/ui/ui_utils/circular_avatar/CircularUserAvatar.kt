@@ -1,4 +1,4 @@
-package com.example.echat.ui.circular_avatar
+package com.example.echat.ui.ui_utils.circular_avatar
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectTransformGestures

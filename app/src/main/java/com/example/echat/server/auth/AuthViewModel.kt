@@ -188,7 +188,7 @@ class AuthViewModel @Inject constructor(
         OneSignal.logout()
         // move to sign in screen
         navController.navigate(Screen.SignIn.route) {
-            popUpTo(Screen.SettingsScreen.route) {
+            popUpTo(Screen.ChatsScreen.route) {
                 inclusive = true
             }
         }

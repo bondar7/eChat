@@ -1,4 +1,4 @@
-package com.example.echat.ui.search_bar
+package com.example.echat.ui.ui_utils.search_bar
 
 import android.app.Activity
 import android.content.Context

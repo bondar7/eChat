@@ -7,5 +7,5 @@ data class ChatSession(
     val sessionId: String,
     val user: Person,
     val lastMessage: String,
-    val lastMessageSentTime: Long
+    val lastMessageSentTime: Long?
 )

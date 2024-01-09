@@ -32,8 +32,8 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.example.echat.server.chat.ChatViewModel
-import com.example.echat.ui.multiple_photo_picker.MultiplePhotoPicker
-import com.example.echat.ui.photo_picker.uriToByteArray
+import com.example.echat.ui.ui_utils.multiple_photo_picker.MultiplePhotoPicker
+import com.example.echat.ui.ui_utils.photo_picker.uriToByteArray
 import com.example.echat.ui.theme.ElementColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -112,9 +112,19 @@ fun ChatScreen(
                         chatViewModel.sendMessage(it)
                     }
                 },
+                onRecordAudio = {
+                    chatViewModel.startRecording(context)
+                },
+                onStopRecordAudio = {
+                    chatViewModel.stopRecording()
+                },
+                onSendAudioMessage = {
+                    chatViewModel.sendAudioMessage()
+                },
                 onPickerShow = {
                     showPhotoPicker = !showPhotoPicker
-                }
+                },
+                isRecordingAudio = chatViewModel.isRecordingAudio.value
             )
         },
         content = {
@@ -151,7 +161,9 @@ fun ChatScreen(
                         onImageMessageClick = {
                             showFullPhoto = !showFullPhoto
                             selectedPhoto = it
-                        }
+                        },
+                        playAudio = { chatViewModel.playAudio(it) },
+                        stopAudio = { chatViewModel.stopAudio() }
                     )
                 }
             }

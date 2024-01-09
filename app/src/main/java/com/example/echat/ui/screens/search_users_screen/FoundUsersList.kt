@@ -25,7 +25,7 @@ import androidx.navigation.NavHostController
 import com.example.echat.server.data.model.Person
 import com.example.echat.navigation.Screen
 import com.example.echat.server.chat.ChatViewModel
-import com.example.echat.ui.circular_avatar.CircularUserAvatar
+import com.example.echat.ui.ui_utils.circular_avatar.CircularUserAvatar
 import com.example.echat.ui.theme.gliroy
 
 @Composable
@@ -37,7 +37,7 @@ fun FoundUsersList(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         items(items = foundUsers) {
             ListItem(

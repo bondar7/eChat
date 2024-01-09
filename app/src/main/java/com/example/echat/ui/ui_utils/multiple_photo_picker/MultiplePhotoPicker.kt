@@ -1,4 +1,4 @@
-package com.example.echat.ui.multiple_photo_picker
+package com.example.echat.ui.ui_utils.multiple_photo_picker
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

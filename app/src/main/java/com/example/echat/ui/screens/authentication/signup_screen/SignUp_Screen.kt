@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -37,8 +39,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
@@ -61,7 +65,7 @@ fun SignInScreen(
 ) {
 
     val context = LocalContext.current
-
+    val softwareKeyboardController = LocalSoftwareKeyboardController.current
     val usernameError = signUpViewModel.usernameError.value
     val emailError = signUpViewModel.emailError.value
     val pwError = signUpViewModel.pwError.value
@@ -75,10 +79,13 @@ fun SignInScreen(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize().background(Color.White)
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
     ) {
-
-        Box(modifier = Modifier.fillMaxSize().padding(10.dp), contentAlignment = Alignment.TopEnd) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(10.dp), contentAlignment = Alignment.TopEnd) {
             if (signUpViewModel.isLoading.value) {
                 CircularProgressIndicator(
                     modifier = Modifier.size(27.dp),
@@ -125,29 +132,35 @@ fun SignInScreen(
             ColumnItem(
                 "Username",
                 "Create your username",
-                signUpViewModel.username.value
-            ) { signUpViewModel.onUpdateUsername(it) }
+                signUpViewModel.username.value,
+                onValueChange = { signUpViewModel.onUpdateUsername(it) },
+                onGo = { signUpViewModel.signUp(softwareKeyboardController) }
+            )
 
             ErrorText(usernameError)
 
             ColumnItem(
                 "Email address",
                 "Enter your email address",
-                signUpViewModel.email.value
-            ) { signUpViewModel.onUpdateEmail(it) }
+                signUpViewModel.email.value,
+                onValueChange = { signUpViewModel.onUpdateEmail(it) },
+                onGo = { signUpViewModel.signUp(softwareKeyboardController) }
+            )
 
             ErrorText(emailError)
 
             ColumnItem(
                 "Password",
                 "Create your password",
-                signUpViewModel.password.value
-            ) { signUpViewModel.onUpdatePassword(it) }
+                signUpViewModel.password.value,
+                onValueChange = { signUpViewModel.onUpdatePassword(it) },
+                onGo = { signUpViewModel.signUp(softwareKeyboardController) }
+            )
 
             ErrorText(pwError)
 
             TextButton(
-                onClick = { signUpViewModel.signUp() }, modifier = Modifier
+                onClick = { signUpViewModel.signUp(softwareKeyboardController) }, modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(
@@ -170,12 +183,13 @@ fun SignInScreen(
                     navController.popBackStack()
                     navController.navigate(Screen.LogIn.route)
                 }) {
-                    Text(text = "Log in now", style = TextStyle(
-                        color = ElementColor,
-                        fontFamily = gliroy,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Text(
+                        text = "Log in now", style = TextStyle(
+                            color = ElementColor,
+                            fontFamily = gliroy,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Medium
+                        )
                     )
                 }
             }
@@ -197,6 +211,7 @@ private fun ColumnItem(
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
+    onGo: () -> Unit
 ) {
     var passwordVisibility by remember {
         mutableStateOf(text != "Password")
@@ -226,6 +241,12 @@ private fun ColumnItem(
                 unfocusedBorderColor = Color.Transparent
             ),
             maxLines = 1,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Go
+            ),
+            keyboardActions = KeyboardActions(
+                onGo = { onGo() }
+            ),
             visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 if (text == "Password") {

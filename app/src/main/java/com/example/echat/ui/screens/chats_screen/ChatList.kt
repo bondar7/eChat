@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echat.server.data.model.ChatSession
 import com.example.echat.server.data.model.Person
-import com.example.echat.ui.circular_avatar.CircularUserAvatar
+import com.example.echat.ui.ui_utils.circular_avatar.CircularUserAvatar
 import com.example.echat.ui.theme.gliroy
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -107,13 +107,14 @@ private fun ListItem(
                     maxLines = 1
                 )
             }
-
         }
     }
 }
 
-private fun formatTimestamp(timestamp: Long): String {
-    val date = Date(timestamp)
-    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
-    return format.format(date)
+private fun formatTimestamp(timestamp: Long?): String {
+   return if (timestamp != null) {
+        val date = Date(timestamp)
+        val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+        format.format(date)
+    } else ""
 }

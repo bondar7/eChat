@@ -1,7 +1,8 @@
 package com.example.echat.ui.screens.chat_screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -12,8 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.AttachFile
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,7 +33,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.echat.R
@@ -43,7 +42,11 @@ import com.example.echat.ui.theme.ElementColor
 @Composable
 fun ChatScreenSendMessage(
     onSendMessage: (String) -> Unit,
-    onPickerShow: () -> Unit
+    onRecordAudio: () -> Unit,
+    onStopRecordAudio: () -> Unit,
+    onSendAudioMessage: () -> Unit,
+    onPickerShow: () -> Unit,
+    isRecordingAudio: Boolean
 ) {
     var textState by remember {
         mutableStateOf("")
@@ -69,7 +72,7 @@ fun ChatScreenSendMessage(
                 ),
                 placeholder = {
                     Text(
-                        text = "Type...",
+                        text = if (!isRecordingAudio) "Type..." else "Recording...",
                         fontSize = 17.sp,
                         color = Color.Gray
                     )
@@ -83,45 +86,75 @@ fun ChatScreenSendMessage(
                     .weight(1f)
                     .height(57.dp),
                 singleLine = true,
+                readOnly = isRecordingAudio,
                 trailingIcon = {
                     IconButton(
-                        onClick = { onPickerShow() },
+                        onClick = {
+                            if (!isRecordingAudio) {
+                                onPickerShow()
+                            } else {
+                                onStopRecordAudio()
+                            }
+                        },
                         modifier = Modifier.padding(end = 5.dp)
                     ) {
                         Icon(
-                            imageVector = ImageVector.vectorResource(id = R.drawable.attach_file),
+                            imageVector =
+                            if(!isRecordingAudio) ImageVector.vectorResource(id = R.drawable.attach_file)
+                            else Icons.Default.Close,
                             contentDescription = null,
                             tint = Color.Gray,
                         )
                     }
                 }
             )
-            Box(modifier = Modifier
-                .weight(0.3f)
-                .padding(start = 10.dp)) {
+            Box(
+                modifier = Modifier
+                    .weight(0.3f)
+                    .padding(start = 10.dp)
+            ) {
                 SendButton(
                     onClick = {
-                        onSendMessage(textState)
-                        textState = ""
-                    }
+                        if (!isRecordingAudio) {
+                            onSendMessage(textState)
+                            textState = ""
+                        } else {
+                            onSendAudioMessage()
+                        }
+                    },
+                    onLongCLick = {
+                        onRecordAudio()
+                    },
+                    isRecordingAudio
                 )
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun SendButton(
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongCLick: () -> Unit,
+    isRecordingAudio: Boolean
 ) {
+
     Box(
         modifier = Modifier
             .clip(CircleShape)
             .background(ElementColor)
-            .clickable { onClick() }
+            .combinedClickable(
+                onClick = { onClick() },
+                onLongClick = {
+                    onLongCLick()
+                }
+            )
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.send),
+            painter =
+            if (isRecordingAudio) painterResource(id = R.drawable.baseline_mic_24)
+            else painterResource(id = R.drawable.send),
             contentDescription = null,
             tint = Color.White,
             modifier = Modifier

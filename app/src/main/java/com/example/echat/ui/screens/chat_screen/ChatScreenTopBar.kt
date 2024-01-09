@@ -39,7 +39,7 @@ import androidx.navigation.NavHostController
 import com.example.echat.R
 import com.example.echat.navigation.Screen
 import com.example.echat.server.data.model.Person
-import com.example.echat.ui.circular_avatar.CircularUserAvatar
+import com.example.echat.ui.ui_utils.circular_avatar.CircularUserAvatar
 import com.example.echat.ui.theme.ElementColor
 import com.example.echat.ui.theme.gliroy
 

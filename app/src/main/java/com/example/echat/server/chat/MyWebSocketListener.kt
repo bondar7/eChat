@@ -9,6 +9,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 import okio.ByteString.Companion.toByteString
+import java.io.File
 
 class MyWebSocketListener(
     private val chatViewModel: ChatViewModel,
@@ -43,5 +44,15 @@ class MyWebSocketListener(
     fun sendImageMessage(webSocket: WebSocket, image: ByteArray) {
         val byteString: ByteString = image.toByteString()
         webSocket.send(byteString)
+    }
+
+    // Method to send audio message in bytes
+    fun sendAudioMessage(webSocket: WebSocket, audio: File) {
+        Log.d("TRY TO SEND AUDIO (START)", audio.toString())
+        val byteArray: ByteArray = audio.readBytes()
+        val byteString: ByteString = byteArray.toByteString()
+        webSocket.send(byteString)
+
+        Log.d("SENT AUDIO: ", byteString.toString())
     }
 }
