@@ -94,7 +94,7 @@ Contributions, issues, and feature requests are welcome! Feel free to **fork** a
 
 ## 📜 License
 
-MIT License © [Maksym Bondar](https://github.com/your-username)
+MIT License © [Maksym Bondar](https://github.com/bondar7)
 
 &nbsp;
 
