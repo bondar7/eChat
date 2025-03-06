@@ -44,7 +44,7 @@ _Coming Soon!_
 
 ### Clone Repository
 ```sh
-git clone https://github.com/your-username/eChat.git
+git clone https://github.com/bondar7/eChat.git
 cd eChat
 ```
 
